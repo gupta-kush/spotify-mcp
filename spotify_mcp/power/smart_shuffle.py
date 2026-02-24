@@ -3,7 +3,8 @@
 import logging
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_all_playlist_items
-from ..config import GENRE_ENERGY_ESTIMATE
+from ..utils.helpers import chunked
+from ..config import GENRE_ENERGY_ESTIMATE, API_BATCH_INTERVAL, API_SLEEP_SECONDS
 
 logger = logging.getLogger(__name__)
 
@@ -76,9 +77,7 @@ def register(mcp):
         # Replace playlist contents: clear then re-add
         reordered_uris = [t["uri"] for t in reordered]
         sp.playlist_replace_items(playlist_id, [])  # Clear
-        # Add back in batches of 100
-        for i in range(0, len(reordered_uris), 100):
-            batch = reordered_uris[i:i + 100]
+        for batch in chunked(reordered_uris, 100):
             sp.playlist_add_items(playlist_id, batch)
 
         return (
@@ -153,8 +152,8 @@ def _genre_variety_shuffle(sp, tracks: list) -> list:
                     genre = genres[0]
             except Exception:
                 pass
-            if i > 0 and i % 10 == 0:
-                _time.sleep(0.1)
+            if i > 0 and i % API_BATCH_INTERVAL == 0:
+                _time.sleep(API_SLEEP_SECONDS)
         genre_groups.setdefault(genre, []).append(t)
 
     # Round-robin interleave
@@ -184,8 +183,8 @@ def _energy_arc_sort(sp, tracks: list) -> list:
                     energy = sum(energies) / len(energies)
             except Exception:
                 pass
-            if i > 0 and i % 10 == 0:
-                _time.sleep(0.1)
+            if i > 0 and i % API_BATCH_INTERVAL == 0:
+                _time.sleep(API_SLEEP_SECONDS)
         scored.append((energy, t))
 
     # Sort by energy ascending

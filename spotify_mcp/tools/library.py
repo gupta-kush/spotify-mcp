@@ -3,6 +3,7 @@
 import logging
 from ..utils.spotify_client import get_client
 from ..utils.formatting import format_track_list, format_album_detail, format_episode
+from ..utils.uri_parser import parse_spotify_id
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ def register(mcp):
 
         sp = get_client()
         # Extract track IDs from URIs
-        track_ids = [u.split(":")[-1] if ":" in u else u for u in uris]
+        track_ids = [parse_spotify_id(u) for u in uris]
         sp.current_user_saved_tracks_add(track_ids)
         return f"Saved {len(track_ids)} track(s) to your Liked Songs."
 
@@ -63,7 +64,7 @@ def register(mcp):
             return "**Error:** Max 50 tracks per call."
 
         sp = get_client()
-        track_ids = [u.split(":")[-1] if ":" in u else u for u in uris]
+        track_ids = [parse_spotify_id(u) for u in uris]
         sp.current_user_saved_tracks_delete(track_ids)
         return f"Removed {len(track_ids)} track(s) from your Liked Songs."
 
@@ -101,7 +102,7 @@ def register(mcp):
         if len(album_ids) > 50:
             return "**Error:** Max 50 albums per call."
         sp = get_client()
-        ids = [a.split(":")[-1] if ":" in a else a for a in album_ids]
+        ids = [parse_spotify_id(a) for a in album_ids]
         sp.current_user_saved_albums_add(ids)
         return f"Saved {len(ids)} album(s) to your library."
 
@@ -117,7 +118,7 @@ def register(mcp):
         if len(album_ids) > 50:
             return "**Error:** Max 50 albums per call."
         sp = get_client()
-        ids = [a.split(":")[-1] if ":" in a else a for a in album_ids]
+        ids = [parse_spotify_id(a) for a in album_ids]
         sp.current_user_saved_albums_delete(ids)
         return f"Removed {len(ids)} album(s) from your library."
 
@@ -133,7 +134,7 @@ def register(mcp):
         if len(track_ids) > 50:
             return "**Error:** Max 50 tracks per call."
         sp = get_client()
-        ids = [t.split(":")[-1] if ":" in t else t for t in track_ids]
+        ids = [parse_spotify_id(t) for t in track_ids]
         results = sp.current_user_saved_tracks_contains(ids)
         lines = ["**Saved Track Check:**", ""]
         for tid, saved in zip(ids, results):
@@ -153,7 +154,7 @@ def register(mcp):
         if len(album_ids) > 50:
             return "**Error:** Max 50 albums per call."
         sp = get_client()
-        ids = [a.split(":")[-1] if ":" in a else a for a in album_ids]
+        ids = [parse_spotify_id(a) for a in album_ids]
         results = sp.current_user_saved_albums_contains(ids)
         lines = ["**Saved Album Check:**", ""]
         for aid, saved in zip(ids, results):

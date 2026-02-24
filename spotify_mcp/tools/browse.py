@@ -3,6 +3,7 @@
 import logging
 from ..utils.spotify_client import get_client
 from ..utils.formatting import format_track, format_album_detail, format_artist, ms_to_duration
+from ..utils.uri_parser import parse_spotify_id
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ def register(mcp):
             track_id: Spotify track ID or URI.
         """
         sp = get_client()
-        track_id = track_id.split(":")[-1] if ":" in track_id else track_id
+        track_id = parse_spotify_id(track_id)
         track = sp.track(track_id)
 
         artists = ", ".join(a["name"] for a in track.get("artists", []))
@@ -58,7 +59,7 @@ def register(mcp):
             album_id: Spotify album ID or URI.
         """
         sp = get_client()
-        album_id = album_id.split(":")[-1] if ":" in album_id else album_id
+        album_id = parse_spotify_id(album_id)
         album = sp.album(album_id)
 
         artists = ", ".join(a["name"] for a in album.get("artists", []))
@@ -115,7 +116,7 @@ def register(mcp):
             artist_id: Spotify artist ID or URI.
         """
         sp = get_client()
-        artist_id = artist_id.split(":")[-1] if ":" in artist_id else artist_id
+        artist_id = parse_spotify_id(artist_id)
         artist = sp.artist(artist_id)
 
         lines = [

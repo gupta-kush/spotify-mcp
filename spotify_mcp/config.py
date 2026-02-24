@@ -1,12 +1,56 @@
 import os
+import sys
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+
+def _get_config_dir() -> Path:
+    """Get the platform-appropriate config directory for spotify-mcp."""
+    if sys.platform == "win32":
+        base = Path(os.environ.get("APPDATA", Path.home() / "AppData" / "Roaming"))
+    else:
+        base = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    return base / "spotify-mcp"
+
+
+def _get_cache_dir() -> Path:
+    """Get the platform-appropriate cache directory for spotify-mcp."""
+    if sys.platform == "win32":
+        base = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
+    else:
+        base = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
+    return base / "spotify-mcp"
+
+
+CONFIG_DIR = _get_config_dir()
+CACHE_DIR = _get_cache_dir()
+
+
+def _load_env():
+    """Load credentials with fallback chain.
+
+    Priority:
+    1. Environment variables already set (e.g. Claude Desktop "env" field)
+    2. ~/.config/spotify-mcp/.env (user config directory)
+    3. .env in current working directory (local development)
+
+    Uses override=False so pre-set env vars always take precedence.
+    """
+    # User config directory (works for uvx, pip, any install method)
+    user_env = CONFIG_DIR / ".env"
+    if user_env.exists():
+        load_dotenv(user_env, override=False)
+
+    # Current working directory (local dev convenience)
+    load_dotenv(override=False)
+
+
+_load_env()
 
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID", "")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET", "")
 SPOTIFY_REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI", "http://127.0.0.1:8888/callback")
-SPOTIFY_CACHE_DIR = os.getenv("SPOTIFY_CACHE_DIR", os.path.dirname(os.path.abspath(__file__)))
+SPOTIFY_CACHE_DIR = os.getenv("SPOTIFY_CACHE_DIR", str(CACHE_DIR))
 
 SCOPES = " ".join([
     # Playback
@@ -36,6 +80,12 @@ DEFAULT_LIMIT = 20
 MAX_SEARCH_PAGE = 10  # Spotify Feb 2026: max 10 per search page
 MAX_PLAYLIST_PAGE = 100  # Max items per playlist page
 MAX_DISPLAY_ITEMS = 50  # Cap output lists for readability
+
+# Rate limiting
+API_BATCH_INTERVAL = 10  # Make an API sleep call every N iterations
+API_SLEEP_SECONDS = 0.1  # Sleep duration between API batch calls
+DESCRIPTION_MAX_LENGTH = 150  # Truncate descriptions in formatted output
+ARTIST_SAMPLE_SIZE = 8  # Number of related artists to sample in discovery
 
 # Mood-to-genre mapping for discovery without recommendations API
 MOOD_GENRE_MAP = {

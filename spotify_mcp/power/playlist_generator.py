@@ -6,6 +6,7 @@ from datetime import datetime
 from ..utils.spotify_client import get_client
 from ..utils.pagination import search_with_pagination, fetch_artist_albums
 from ..utils.formatting import format_track_list
+from ..utils.uri_parser import parse_spotify_id
 from ..config import MOOD_GENRE_MAP, DECADE_RANGES
 from ..utils.helpers import chunked
 
@@ -78,7 +79,7 @@ def register(mcp):
 
         try:
             # Determine the seed artist
-            seed_id = seed_uri.split(":")[-1] if ":" in seed_uri else seed_uri
+            seed_id = parse_spotify_id(seed_uri)
             artist_id = None
             artist_name = None
 

@@ -3,6 +3,7 @@
 import logging
 from ..utils.spotify_client import get_client
 from ..utils.formatting import format_show, format_episode, ms_to_duration
+from ..utils.uri_parser import parse_spotify_id
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ def register(mcp):
             show_id: Spotify show ID or URI.
         """
         sp = get_client()
-        show_id = show_id.split(":")[-1] if ":" in show_id else show_id
+        show_id = parse_spotify_id(show_id)
         show = sp.show(show_id)
 
         lines = [
@@ -75,7 +76,7 @@ def register(mcp):
         """
         limit = max(1, min(50, limit))
         sp = get_client()
-        show_id = show_id.split(":")[-1] if ":" in show_id else show_id
+        show_id = parse_spotify_id(show_id)
         results = sp.show_episodes(show_id, limit=limit)
         items = results.get("items", [])
         total = results.get("total", 0)
@@ -101,7 +102,7 @@ def register(mcp):
         if len(show_ids) > 50:
             return "**Error:** Max 50 shows per call."
         sp = get_client()
-        ids = [s.split(":")[-1] if ":" in s else s for s in show_ids]
+        ids = [parse_spotify_id(s) for s in show_ids]
         sp.current_user_saved_shows_add(ids)
         return f"Saved {len(ids)} show(s) to your library."
 
@@ -117,7 +118,7 @@ def register(mcp):
         if len(show_ids) > 50:
             return "**Error:** Max 50 shows per call."
         sp = get_client()
-        ids = [s.split(":")[-1] if ":" in s else s for s in show_ids]
+        ids = [parse_spotify_id(s) for s in show_ids]
         sp.current_user_saved_shows_delete(ids)
         return f"Removed {len(ids)} show(s) from your library."
 
@@ -133,7 +134,7 @@ def register(mcp):
         if len(show_ids) > 50:
             return "**Error:** Max 50 shows per call."
         sp = get_client()
-        ids = [s.split(":")[-1] if ":" in s else s for s in show_ids]
+        ids = [parse_spotify_id(s) for s in show_ids]
         results = sp.current_user_saved_shows_contains(ids)
         lines = ["**Saved Show Check:**", ""]
         for sid, saved in zip(ids, results):
@@ -153,7 +154,7 @@ def register(mcp):
         if len(episode_ids) > 50:
             return "**Error:** Max 50 episodes per call."
         sp = get_client()
-        ids = [e.split(":")[-1] if ":" in e else e for e in episode_ids]
+        ids = [parse_spotify_id(e) for e in episode_ids]
         sp.current_user_saved_episodes_add(ids)
         return f"Saved {len(ids)} episode(s) to your library."
 
@@ -165,7 +166,7 @@ def register(mcp):
             episode_id: Spotify episode ID or URI.
         """
         sp = get_client()
-        episode_id = episode_id.split(":")[-1] if ":" in episode_id else episode_id
+        episode_id = parse_spotify_id(episode_id)
         ep = sp.episode(episode_id)
 
         lines = [

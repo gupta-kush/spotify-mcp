@@ -4,6 +4,7 @@ import logging
 from ..utils.spotify_client import get_client
 from ..utils.pagination import fetch_all_playlist_items
 from ..utils.formatting import ms_to_duration
+from ..utils.helpers import chunked
 
 logger = logging.getLogger(__name__)
 
@@ -68,8 +69,7 @@ def register(mcp):
         # Replace playlist contents
         sorted_uris = [s["uri"] for s in sortable]
         sp.playlist_replace_items(playlist_id, [])  # Clear
-        for i in range(0, len(sorted_uris), 100):
-            batch = sorted_uris[i:i + 100]
+        for batch in chunked(sorted_uris, 100):
             sp.playlist_add_items(playlist_id, batch)
 
         direction = "descending" if reverse else "ascending"

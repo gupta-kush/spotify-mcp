@@ -35,6 +35,7 @@ Issues = "https://github.com/gupta-kush/spotify-mcp/issues"
 
 [project.scripts]
 spotify-mcp = "spotify_mcp.server:main"
+spotify-mcp-setup = "spotify_mcp.cli:setup"
 
 [tool.hatch.build.targets.wheel]
 packages = ["spotify_mcp"]

@@ -7,6 +7,7 @@ from ..utils.formatting import (
     format_track_list, ms_to_duration,
 )
 from ..utils.pagination import fetch_all_playlist_items
+from ..utils.uri_parser import parse_spotify_id
 
 logger = logging.getLogger(__name__)
 
@@ -261,7 +262,7 @@ def register(mcp):
             playlist_id: Spotify playlist ID or URI.
         """
         sp = get_client()
-        playlist_id = playlist_id.split(":")[-1] if ":" in playlist_id else playlist_id
+        playlist_id = parse_spotify_id(playlist_id)
         images = sp.playlist_cover_image(playlist_id)
         if not images:
             return "No cover image found for this playlist."
@@ -286,7 +287,7 @@ def register(mcp):
         if len(user_ids) > 5:
             return "**Error:** Max 5 user IDs per call (Spotify API limit)."
         sp = get_client()
-        playlist_id = playlist_id.split(":")[-1] if ":" in playlist_id else playlist_id
+        playlist_id = parse_spotify_id(playlist_id)
         results = sp.playlist_is_following(playlist_id, user_ids)
         lines = ["**Playlist Follower Check:**", ""]
         for uid, following in zip(user_ids, results):

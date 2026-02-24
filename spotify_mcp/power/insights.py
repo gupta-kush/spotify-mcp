@@ -7,6 +7,7 @@ from datetime import datetime
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_all_playlist_items
 from ..utils.formatting import format_time_distribution, format_genre_chart, ms_to_duration
+from ..utils.uri_parser import parse_spotify_id
 
 logger = logging.getLogger(__name__)
 
@@ -281,7 +282,7 @@ def register(mcp):
         playlist_artist_names = {}  # artist_id -> name
 
         for pid in playlist_ids:
-            pid = pid.split(":")[-1] if ":" in pid else pid
+            pid = parse_spotify_id(pid)
             try:
                 meta = sp.playlist(pid, fields="name")
                 playlist_names[pid] = meta.get("name", "Unknown")
@@ -315,7 +316,7 @@ def register(mcp):
             playlist_artists[pid] = artist_ids
 
         # Normalize playlist_ids to cleaned IDs
-        clean_ids = [pid.split(":")[-1] if ":" in pid else pid for pid in playlist_ids]
+        clean_ids = [parse_spotify_id(pid) for pid in playlist_ids]
 
         # Shared tracks (in ALL playlists)
         if clean_ids:

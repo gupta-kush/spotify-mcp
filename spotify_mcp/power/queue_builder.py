@@ -6,6 +6,7 @@ import random
 from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client
 from ..utils.pagination import fetch_all_playlist_items
+from ..config import API_SLEEP_SECONDS
 
 logger = logging.getLogger(__name__)
 

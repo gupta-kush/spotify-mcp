@@ -4,6 +4,7 @@ import logging
 from ..utils.spotify_client import get_client
 from ..utils.formatting import format_artist_list
 from ..utils.pagination import fetch_followed_artists
+from ..utils.uri_parser import parse_spotify_id
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ def register(mcp):
         if len(artist_ids) > 50:
             return "**Error:** Max 50 artists per call."
         sp = get_client()
-        ids = [a.split(":")[-1] if ":" in a else a for a in artist_ids]
+        ids = [parse_spotify_id(a) for a in artist_ids]
         sp.user_follow_artists(ids)
         return f"Now following {len(ids)} artist(s)."
 
@@ -38,7 +39,7 @@ def register(mcp):
         if len(artist_ids) > 50:
             return "**Error:** Max 50 artists per call."
         sp = get_client()
-        ids = [a.split(":")[-1] if ":" in a else a for a in artist_ids]
+        ids = [parse_spotify_id(a) for a in artist_ids]
         sp.user_unfollow_artists(ids)
         return f"Unfollowed {len(ids)} artist(s)."
 
@@ -69,7 +70,7 @@ def register(mcp):
         if len(artist_ids) > 50:
             return "**Error:** Max 50 artists per call."
         sp = get_client()
-        ids = [a.split(":")[-1] if ":" in a else a for a in artist_ids]
+        ids = [parse_spotify_id(a) for a in artist_ids]
         results = sp.current_user_following_artists(ids)
         lines = ["**Following Check:**", ""]
         for aid, following in zip(ids, results):

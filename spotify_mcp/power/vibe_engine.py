@@ -13,7 +13,8 @@ from collections import Counter
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_all_playlist_items, search_with_pagination
 from ..utils.formatting import format_track_list, format_genre_chart
-from ..config import GENRE_CLUSTERS, GENRE_ENERGY_ESTIMATE
+from ..utils.uri_parser import parse_spotify_id
+from ..config import GENRE_CLUSTERS, GENRE_ENERGY_ESTIMATE, API_BATCH_INTERVAL, API_SLEEP_SECONDS
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +98,7 @@ def register(mcp):
             playlist_id: Spotify playlist ID or URI.
         """
         sp = get_client()
-        playlist_id = playlist_id.split(":")[-1] if ":" in playlist_id else playlist_id
+        playlist_id = parse_spotify_id(playlist_id)
 
         try:
             playlist_info = sp.playlist(playlist_id, fields="name,tracks.total")
@@ -146,9 +147,9 @@ def register(mcp):
             except Exception as e:
                 logger.warning("Failed to fetch artist %s: %s", aid, e)
 
-            # Throttle: sleep 0.2s every 10 fetches to avoid rate limits
-            if (i + 1) % 10 == 0:
-                time.sleep(0.2)
+            # Throttle to avoid rate limits
+            if (i + 1) % API_BATCH_INTERVAL == 0:
+                time.sleep(API_SLEEP_SECONDS)
 
         if not all_genres:
             return (
@@ -230,7 +231,7 @@ def register(mcp):
         """
         sp = get_client()
         limit = max(1, min(30, limit))
-        source_playlist_id = source_playlist_id.split(":")[-1] if ":" in source_playlist_id else source_playlist_id
+        source_playlist_id = parse_spotify_id(source_playlist_id)
 
         try:
             playlist_info = sp.playlist(source_playlist_id, fields="name")
@@ -272,8 +273,8 @@ def register(mcp):
                 genre_counts.update(genres)
             except Exception as e:
                 logger.warning("Failed to fetch artist %s: %s", aid, e)
-            if (i + 1) % 10 == 0:
-                time.sleep(0.2)
+            if (i + 1) % API_BATCH_INTERVAL == 0:
+                time.sleep(API_SLEEP_SECONDS)
 
         if not genre_counts:
             return f"**Error:** No genre data available for artists in '{playlist_name}'."

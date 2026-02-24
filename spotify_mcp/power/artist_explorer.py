@@ -6,6 +6,7 @@ from collections import Counter
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_artist_albums
 from ..utils.formatting import format_artist_list, format_album
+from ..config import API_SLEEP_SECONDS
 
 logger = logging.getLogger(__name__)
 
@@ -180,7 +181,7 @@ def register(mcp):
                             f"Could not fetch related for {rname}: {e}"
                         )
                     if i < len(top5) - 1:
-                        time.sleep(0.1)
+                        time.sleep(API_SLEEP_SECONDS)
 
                 # Cap layer 2 at ~100 unique total
                 if len(layer2) > 100:

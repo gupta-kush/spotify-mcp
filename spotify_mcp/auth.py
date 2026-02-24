@@ -1,5 +1,6 @@
 import os
 import logging
+from pathlib import Path
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, CacheFileHandler
 from .config import (
@@ -24,9 +25,17 @@ def get_spotify_client() -> spotipy.Spotify:
 
     if not SPOTIFY_CLIENT_ID or not SPOTIFY_CLIENT_SECRET:
         raise RuntimeError(
-            "SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET must be set. "
-            "See .env.example for details."
+            "SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET must be set.\n"
+            "Options:\n"
+            "  1. Run: spotify-mcp setup\n"
+            "  2. Set env vars in your Claude Desktop config\n"
+            "  3. Copy .env.example to .env and fill in credentials\n"
+            "See: https://developer.spotify.com/dashboard"
         )
+
+    # Ensure cache directory exists
+    cache_dir = Path(SPOTIFY_CACHE_DIR)
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
     cache_path = os.path.join(SPOTIFY_CACHE_DIR, ".spotify_token_cache")
     handler = CacheFileHandler(cache_path=cache_path)

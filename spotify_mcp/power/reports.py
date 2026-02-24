@@ -6,6 +6,7 @@ from collections import Counter
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_all_playlist_items
 from ..utils.formatting import format_track, format_artist, ms_to_duration
+from ..config import API_BATCH_INTERVAL, API_SLEEP_SECONDS
 
 logger = logging.getLogger(__name__)
 
@@ -158,8 +159,8 @@ def register(mcp):
                     genre_counter[genre] += 1
             except Exception as e:
                 logger.warning(f"Could not fetch artist {aid}: {e}")
-            if i > 0 and i % 10 == 0:
-                time.sleep(0.2)  # Brief pause every 10 fetches
+            if i > 0 and i % API_BATCH_INTERVAL == 0:
+                time.sleep(API_SLEEP_SECONDS)
 
         if len(artist_ids_to_fetch) > 100:
             logger.info(

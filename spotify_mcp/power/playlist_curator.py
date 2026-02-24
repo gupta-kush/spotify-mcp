@@ -5,6 +5,7 @@ import random
 from ..utils.spotify_client import get_client
 from ..utils.pagination import fetch_all_playlist_items, fetch_artist_albums
 from ..utils.formatting import format_track_list
+from ..utils.uri_parser import parse_spotify_id
 from ..utils.helpers import chunked
 
 logger = logging.getLogger(__name__)
@@ -32,7 +33,7 @@ def register(mcp):
                      Set to False to actually remove the identified tracks.
         """
         sp = get_client()
-        playlist_id = playlist_id.split(":")[-1] if ":" in playlist_id else playlist_id
+        playlist_id = parse_spotify_id(playlist_id)
 
         try:
             playlist_info = sp.playlist(playlist_id, fields="name")
@@ -171,7 +172,7 @@ def register(mcp):
 
         # Normalize IDs
         playlist_ids = [
-            pid.split(":")[-1] if ":" in pid else pid
+            parse_spotify_id(pid)
             for pid in playlist_ids
         ]
 
@@ -260,7 +261,7 @@ def register(mcp):
         track_count = max(1, min(50, track_count))
 
         sp = get_client()
-        playlist_id = playlist_id.split(":")[-1] if ":" in playlist_id else playlist_id
+        playlist_id = parse_spotify_id(playlist_id)
         user_id = sp.me()["id"]
 
         try:
