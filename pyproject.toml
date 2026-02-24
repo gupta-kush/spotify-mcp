@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "spotify-mcp"
+version = "1.0.0"
+description = "The most comprehensive Spotify MCP server — 93 tools for playback, playlists, discovery, analytics, and more"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Kush Gupta" }]
+keywords = ["mcp", "spotify", "model-context-protocol", "claude", "ai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Sound/Audio",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "spotipy>=2.25.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/gupta-kush/spotify-mcp"
+Repository = "https://github.com/gupta-kush/spotify-mcp"
+Issues = "https://github.com/gupta-kush/spotify-mcp/issues"
+
+[project.scripts]
+spotify-mcp = "spotify_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["spotify_mcp"]
