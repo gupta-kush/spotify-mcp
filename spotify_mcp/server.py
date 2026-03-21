@@ -1,3 +1,5 @@
+import importlib
+import os
 import sys
 import logging
 from mcp.server.fastmcp import FastMCP
@@ -20,10 +22,7 @@ mcp = FastMCP(
 
 @mcp.tool()
 def spotify_status() -> str:
-    """Get your Spotify connection status, profile info, and current playback state.
-
-    Use this to verify the Spotify MCP is working correctly.
-    """
+    """Check Spotify connection status, profile info, and current playback."""
     from .utils.spotify_client import get_client
     from .utils.formatting import format_track, format_device
 
@@ -60,63 +59,97 @@ def spotify_status() -> str:
     return "\n".join(lines)
 
 
-# --- Register tool modules ---
+# --- Module registry and toolset loading ---
 
-def _register_all():
-    """Import and register all tool modules."""
-    from .tools.playback import register as register_playback
-    from .tools.playlists import register as register_playlists
-    from .tools.search import register as register_search
-    from .tools.discovery import register as register_discovery
-    from .tools.stats import register as register_stats
-    from .tools.library import register as register_library
-    from .power.playlist_ops import register as register_playlist_ops
-    from .power.reports import register as register_reports
-    from .power.smart_shuffle import register as register_smart_shuffle
-    from .power.deep_dive import register as register_deep_dive
-    from .tools.follow import register as register_follow
-    from .tools.shows import register as register_shows
-    from .power.playlist_generator import register as register_playlist_generator
-    from .power.playlist_sort import register as register_playlist_sort
-    from .power.playlist_curator import register as register_playlist_curator
-    from .power.queue_builder import register as register_queue_builder
-    from .power.vibe_engine import register as register_vibe_engine
-    from .power.insights import register as register_insights
-    from .power.artist_explorer import register as register_artist_explorer
-    from .power.find_song import register as register_find_song
-    from .tools.browse import register as register_browse
-
-    register_playback(mcp)
-    register_playlists(mcp)
-    register_search(mcp)
-    register_discovery(mcp)
-    register_stats(mcp)
-    register_library(mcp)
-    register_follow(mcp)
-    register_shows(mcp)
-    register_playlist_ops(mcp)
-    register_reports(mcp)
-    register_smart_shuffle(mcp)
-    register_deep_dive(mcp)
-    register_playlist_generator(mcp)
-    register_playlist_sort(mcp)
-    register_playlist_curator(mcp)
-    register_queue_builder(mcp)
-    register_vibe_engine(mcp)
-    register_insights(mcp)
-    register_artist_explorer(mcp)
-    register_find_song(mcp)
-    register_browse(mcp)
-
-    logger.info("All tool modules registered")
+# Module registry — maps module name to (package, import_name)
+_MODULE_REGISTRY = {
+    # tools/ modules
+    "playback": ("tools", "playback"),
+    "playlists": ("tools", "playlists"),
+    "search": ("tools", "search"),
+    "discovery": ("tools", "discovery"),
+    "stats": ("tools", "stats"),
+    "library": ("tools", "library"),
+    "follow": ("tools", "follow"),
+    "shows": ("tools", "shows"),
+    "browse": ("tools", "browse"),
+    # power/ modules
+    "playlist_ops": ("power", "playlist_ops"),
+    "reports": ("power", "reports"),
+    "smart_shuffle": ("power", "smart_shuffle"),
+    "deep_dive": ("power", "deep_dive"),
+    "playlist_generator": ("power", "playlist_generator"),
+    "playlist_sort": ("power", "playlist_sort"),
+    "playlist_curator": ("power", "playlist_curator"),
+    "queue_builder": ("power", "queue_builder"),
+    "vibe_engine": ("power", "vibe_engine"),
+    "insights": ("power", "insights"),
+    "artist_explorer": ("power", "artist_explorer"),
+    "find_song": ("power", "find_song"),
+}
 
 
-_register_all()
+def _parse_toolsets() -> str:
+    """Get toolsets from CLI args or env var.
 
-from .config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
-if not SPOTIFY_CLIENT_ID or not SPOTIFY_CLIENT_SECRET:
+    Priority: --toolsets CLI flag > SPOTIFY_MCP_TOOLSETS env var > "all"
+    """
+    for i, arg in enumerate(sys.argv[1:], 1):
+        if arg.startswith("--toolsets="):
+            return arg.split("=", 1)[1]
+        if arg == "--toolsets" and i < len(sys.argv) - 1:
+            return sys.argv[i + 1]
+    return os.environ.get("SPOTIFY_MCP_TOOLSETS", "all")
+
+
+def _resolve_toolsets(toolset_str: str) -> list[str]:
+    """Resolve toolset names to a list of module names."""
+    from .config import TOOLSET_MODULES
+
+    if toolset_str == "all":
+        return list(_MODULE_REGISTRY.keys())
+
+    modules = []
+    for name in toolset_str.split(","):
+        name = name.strip()
+        if name == "all":
+            return list(_MODULE_REGISTRY.keys())
+        elif name in TOOLSET_MODULES:
+            modules.extend(TOOLSET_MODULES[name])
+        elif name in _MODULE_REGISTRY:
+            # Allow individual module names too
+            modules.append(name)
+        else:
+            logger.warning(f"Unknown toolset or module: {name}")
+
+    return list(dict.fromkeys(modules))  # dedupe preserving order
+
+
+def _register_modules(module_names: list[str]):
+    """Import and register the specified tool modules."""
+    for name in module_names:
+        if name not in _MODULE_REGISTRY:
+            logger.warning(f"Unknown module: {name}")
+            continue
+        package, module = _MODULE_REGISTRY[name]
+        try:
+            mod = importlib.import_module(f".{package}.{module}", package="spotify_mcp")
+            mod.register(mcp)
+        except Exception as e:
+            logger.error(f"Failed to register module {name}: {e}")
+
+    logger.info(f"Registered {len(module_names)} tool modules: {', '.join(module_names)}")
+
+
+# --- Perform registration at import time ---
+
+_toolsets = _parse_toolsets()
+_register_modules(_resolve_toolsets(_toolsets))
+
+from .config import SPOTIFY_CLIENT_ID
+if not SPOTIFY_CLIENT_ID:
     logger.warning(
-        "SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET not set. "
+        "SPOTIFY_CLIENT_ID not set. "
         "Copy .env.example to .env and add your credentials. "
         "See: https://developer.spotify.com/dashboard"
     )

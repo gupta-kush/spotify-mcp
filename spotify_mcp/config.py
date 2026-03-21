@@ -130,3 +130,26 @@ GENRE_ENERGY_ESTIMATE = {
     "classical": 0.25, "chillwave": 0.25, "piano": 0.2, "lo-fi": 0.2,
     "ambient": 0.15,
 }
+
+# Toolset configuration
+# Toolsets group modules for configurable loading (reduces LLM context usage)
+TOOLSET_MODULES = {
+    "core": [
+        "playback", "playlists", "search", "browse", "stats", "library",
+    ],
+    "social": [
+        "follow", "shows",
+    ],
+    "discovery": [
+        "discovery",
+    ],
+    "power": [
+        "playlist_ops", "reports", "smart_shuffle", "deep_dive",
+        "playlist_generator", "playlist_sort", "playlist_curator",
+        "queue_builder", "vibe_engine", "insights", "artist_explorer",
+        "find_song",
+    ],
+}
+
+# Default toolsets when none specified (all tools for backward compat)
+DEFAULT_TOOLSETS = "all"
