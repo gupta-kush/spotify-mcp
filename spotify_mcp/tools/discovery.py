@@ -7,6 +7,7 @@ is built from: search, related artists, and artist albums.
 import logging
 import random
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.pagination import search_with_pagination, fetch_artist_albums
 from ..utils.formatting import format_track_list, format_artist_list, format_track
 from ..config import MOOD_GENRE_MAP
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_related_artists(artist_id: str) -> str:
         """Get artists similar to a given artist.
 
@@ -41,6 +43,7 @@ def register(mcp):
         return header + format_artist_list(related)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_discover_by_artist(artist_id: str, limit: int = 20) -> str:
         """Discover new tracks through an artist's related artists.
 
@@ -97,6 +100,7 @@ def register(mcp):
         return header + format_track_list(selected)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_discover_by_mood(mood: str, limit: int = 20) -> str:
         """Discover tracks matching a mood or vibe.
 
@@ -149,6 +153,7 @@ def register(mcp):
         return header + format_track_list(selected)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_genre_explorer(genre: str, limit: int = 20) -> str:
         """Explore a genre — find tracks and artists.
 
@@ -174,6 +179,7 @@ def register(mcp):
         return "\n\n".join(parts)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_discover_deep_cuts(artist_id: str, limit: int = 10) -> str:
         """Find deep cuts — album tracks that weren't released as singles.
 

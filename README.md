@@ -104,7 +104,7 @@ Or if running from source:
 
 ## Tool Reference
 
-### Playback (14 tools)
+### Playback (15 tools)
 
 | Tool | Description |
 |------|-------------|
@@ -380,9 +380,10 @@ spotify_mcp/
 │   └── find_song.py               # 1 tool — natural language search
 └── utils/
     ├── spotify_client.py          # Spotipy client + artist cache
+    ├── errors.py                  # Error handling + decorator
     ├── formatting.py              # Markdown formatters
+    ├── helpers.py                 # Shared utilities
     ├── pagination.py              # Pagination helpers
-    ├── rate_limit.py              # Rate limiting
     └── uri_parser.py              # URI/URL/ID parsing
 ```
 

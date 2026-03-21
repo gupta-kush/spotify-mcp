@@ -1,6 +1,7 @@
 """Smart shuffle tool — variety-based playlist reordering."""
 
 import logging
+from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_all_playlist_items
 from ..utils.helpers import chunked
@@ -150,7 +151,7 @@ def _genre_variety_shuffle(sp, tracks: list) -> list:
                 genres = artist_data.get("genres", [])
                 if genres:
                     genre = genres[0]
-            except Exception:
+            except SpotifyException:
                 pass
             if i > 0 and i % API_BATCH_INTERVAL == 0:
                 _time.sleep(API_SLEEP_SECONDS)
@@ -181,7 +182,7 @@ def _energy_arc_sort(sp, tracks: list) -> list:
                 energies = [GENRE_ENERGY_ESTIMATE.get(g, 0.5) for g in genres]
                 if energies:
                     energy = sum(energies) / len(energies)
-            except Exception:
+            except SpotifyException:
                 pass
             if i > 0 and i % API_BATCH_INTERVAL == 0:
                 _time.sleep(API_SLEEP_SECONDS)

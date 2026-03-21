@@ -3,6 +3,7 @@
 import logging
 import time
 from collections import Counter
+from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_artist_albums
 from ..utils.formatting import format_artist_list, format_album
@@ -111,7 +112,7 @@ def register(mcp):
 
             return "\n".join(lines)
 
-        except Exception as e:
+        except SpotifyException as e:
             logger.error(f"Artist timeline failed: {e}")
             return f"**Error:** {e}"
 
@@ -176,7 +177,7 @@ def register(mcp):
                             if aid not in all_artists:
                                 all_artists[aid] = a
                                 layer2.append(a)
-                    except Exception as e:
+                    except SpotifyException as e:
                         logger.warning(
                             f"Could not fetch related for {rname}: {e}"
                         )
@@ -264,6 +265,6 @@ def register(mcp):
 
             return "\n".join(lines)
 
-        except Exception as e:
+        except SpotifyException as e:
             logger.error(f"Artist network failed: {e}")
             return f"**Error:** {e}"

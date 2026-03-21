@@ -2,6 +2,7 @@
 
 import logging
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.formatting import format_track, format_album_detail, format_artist, ms_to_duration
 from ..utils.uri_parser import parse_spotify_id
 
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_track(track_id: str) -> str:
         """Get detailed information about a track.
 
@@ -52,6 +54,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_album(album_id: str) -> str:
         """Get detailed information about an album including its tracklist.
 
@@ -109,6 +112,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_artist(artist_id: str) -> str:
         """Get detailed information about an artist.
 
@@ -143,6 +147,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_user(user_id: str) -> str:
         """Get a Spotify user's public profile.
 

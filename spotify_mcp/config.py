@@ -86,6 +86,8 @@ API_BATCH_INTERVAL = 10  # Make an API sleep call every N iterations
 API_SLEEP_SECONDS = 0.1  # Sleep duration between API batch calls
 DESCRIPTION_MAX_LENGTH = 150  # Truncate descriptions in formatted output
 ARTIST_SAMPLE_SIZE = 8  # Number of related artists to sample in discovery
+SESSION_GAP_SECONDS = 1800  # Gap between listening sessions (30 minutes)
+MAX_RELATED_ARTISTS = 100  # Cap on related artist results in network mapping
 
 # Mood-to-genre mapping for discovery without recommendations API
 MOOD_GENRE_MAP = {

@@ -3,6 +3,7 @@
 import logging
 from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.formatting import format_track, format_device, ms_to_duration
 
 logger = logging.getLogger(__name__)
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_now_playing() -> str:
         """Get the currently playing track, playback state, and device info.
 
@@ -40,6 +42,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_play(
         uri: str = None,
         context_uri: str = None,
@@ -74,6 +77,7 @@ def register(mcp):
         return f"Now playing: {uri or context_uri}"
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_pause(device_id: str = None) -> str:
         """Pause the current playback.
 
@@ -88,6 +92,7 @@ def register(mcp):
         return "Playback paused."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_resume(device_id: str = None) -> str:
         """Resume paused playback.
 
@@ -102,6 +107,7 @@ def register(mcp):
         return "Playback resumed."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_skip_next(device_id: str = None) -> str:
         """Skip to the next track.
 
@@ -116,6 +122,7 @@ def register(mcp):
         return "Skipped to next track."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_skip_previous(device_id: str = None) -> str:
         """Skip to the previous track.
 
@@ -130,6 +137,7 @@ def register(mcp):
         return "Skipped to previous track."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_add_to_queue(uri: str) -> str:
         """Add a track or episode to the playback queue.
 
@@ -141,6 +149,7 @@ def register(mcp):
         return f"Added to queue: {uri}"
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_queue() -> str:
         """Get the current playback queue.
 
@@ -169,6 +178,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_devices() -> str:
         """List all available Spotify Connect devices.
 
@@ -185,6 +195,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_set_volume(volume_percent: int, device_id: str = None) -> str:
         """Set the playback volume.
 
@@ -204,6 +215,7 @@ def register(mcp):
         return f"Volume set to {volume_percent}%."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_seek(position_ms: int) -> str:
         """Seek to a position in the currently playing track.
 
@@ -217,6 +229,7 @@ def register(mcp):
         return f"Seeked to {ms_to_duration(position_ms)}."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_set_repeat(state: str) -> str:
         """Set the repeat mode for playback.
 
@@ -233,6 +246,7 @@ def register(mcp):
         return f"Repeat mode set to {state}."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_toggle_shuffle(state: bool) -> str:
         """Turn shuffle on or off.
 
@@ -246,6 +260,7 @@ def register(mcp):
         return f"Shuffle {'on' if state else 'off'}."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_transfer_playback(device_id: str, force_play: bool = False) -> str:
         """Transfer playback to a different device.
 

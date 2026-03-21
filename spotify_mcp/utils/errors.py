@@ -1,9 +1,23 @@
 """Shared error handling for Spotify API exceptions."""
 
+import functools
 import logging
 from spotipy.exceptions import SpotifyException
 
 logger = logging.getLogger(__name__)
+
+
+def catch_spotify_errors(func):
+    """Decorator that catches Spotify API errors and returns user-friendly messages."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except SpotifyException as e:
+            return handle_spotify_error(e)
+        except ValueError as e:
+            return f"**Error:** {e}"
+    return wrapper
 
 
 def handle_spotify_error(e: SpotifyException) -> str:

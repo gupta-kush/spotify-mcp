@@ -2,6 +2,7 @@
 
 import logging
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.formatting import format_track_list, format_artist_list, format_track
 
 logger = logging.getLogger(__name__)
@@ -16,6 +17,7 @@ VALID_TIME_RANGES = {
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_top_tracks(
         time_range: str = "medium_term",
         limit: int = 20,
@@ -42,6 +44,7 @@ def register(mcp):
         return header + format_track_list(tracks)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_top_artists(
         time_range: str = "medium_term",
         limit: int = 20,
@@ -68,6 +71,7 @@ def register(mcp):
         return header + format_artist_list(artists)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_recently_played(limit: int = 20) -> str:
         """Get your recently played tracks.
 

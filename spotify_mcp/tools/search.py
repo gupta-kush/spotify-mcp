@@ -2,6 +2,7 @@
 
 import logging
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.pagination import search_with_pagination
 from ..utils.formatting import format_track_list, format_artist_list, format_playlist_list, format_album
 
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_search(
         query: str,
         type: str = "track",

@@ -2,6 +2,7 @@
 
 import logging
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.formatting import format_track_list, format_album_detail, format_episode
 from ..utils.uri_parser import parse_spotify_id
 
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_saved_tracks(limit: int = 50, offset: int = 0) -> str:
         """Get your liked/saved tracks.
 
@@ -32,6 +34,7 @@ def register(mcp):
         return header + format_track_list(tracks)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_save_tracks(uris: list[str]) -> str:
         """Save tracks to your Liked Songs library.
 
@@ -51,6 +54,7 @@ def register(mcp):
         return f"Saved {len(track_ids)} track(s) to your Liked Songs."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_remove_saved_tracks(uris: list[str]) -> str:
         """Remove tracks from your Liked Songs library.
 
@@ -69,6 +73,7 @@ def register(mcp):
         return f"Removed {len(track_ids)} track(s) from your Liked Songs."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_saved_albums(limit: int = 20, offset: int = 0) -> str:
         """Get your saved albums.
 
@@ -91,6 +96,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_save_albums(album_ids: list[str]) -> str:
         """Save albums to your library.
 
@@ -107,6 +113,7 @@ def register(mcp):
         return f"Saved {len(ids)} album(s) to your library."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_remove_saved_albums(album_ids: list[str]) -> str:
         """Remove albums from your library.
 
@@ -123,6 +130,7 @@ def register(mcp):
         return f"Removed {len(ids)} album(s) from your library."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_check_saved_tracks(track_ids: list[str]) -> str:
         """Check which tracks are saved in your Liked Songs.
 
@@ -143,6 +151,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_check_saved_albums(album_ids: list[str]) -> str:
         """Check which albums are saved in your library.
 
@@ -163,6 +172,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_saved_episodes(limit: int = 20) -> str:
         """Get your saved podcast episodes.
 

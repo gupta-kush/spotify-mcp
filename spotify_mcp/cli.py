@@ -1,5 +1,6 @@
 """Interactive setup wizard for Spotify MCP."""
 
+import getpass
 import os
 import sys
 from pathlib import Path
@@ -19,7 +20,7 @@ def setup():
         print("Error: Client ID is required.")
         sys.exit(1)
 
-    client_secret = input("Spotify Client Secret: ").strip()
+    client_secret = getpass.getpass("Spotify Client Secret: ").strip()
     if not client_secret:
         print("Error: Client Secret is required.")
         sys.exit(1)

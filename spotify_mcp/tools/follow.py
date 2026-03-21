@@ -2,6 +2,7 @@
 
 import logging
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.formatting import format_artist_list
 from ..utils.pagination import fetch_followed_artists
 from ..utils.uri_parser import parse_spotify_id
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_follow_artists(artist_ids: list[str]) -> str:
         """Follow one or more artists.
 
@@ -28,6 +30,7 @@ def register(mcp):
         return f"Now following {len(ids)} artist(s)."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_unfollow_artists(artist_ids: list[str]) -> str:
         """Unfollow one or more artists.
 
@@ -44,6 +47,7 @@ def register(mcp):
         return f"Unfollowed {len(ids)} artist(s)."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_followed_artists(limit: int = 20) -> str:
         """Get your followed artists.
 
@@ -59,6 +63,7 @@ def register(mcp):
         return header + format_artist_list(artists)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_check_following_artists(artist_ids: list[str]) -> str:
         """Check if you follow specific artists.
 
@@ -79,6 +84,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_check_following_users(user_ids: list[str]) -> str:
         """Check if you follow specific Spotify users.
 
@@ -96,6 +102,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_follow_users(user_ids: list[str]) -> str:
         """Follow one or more Spotify users.
 
@@ -109,6 +116,7 @@ def register(mcp):
         return f"Now following {len(user_ids)} user(s)."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_unfollow_users(user_ids: list[str]) -> str:
         """Unfollow one or more Spotify users.
 

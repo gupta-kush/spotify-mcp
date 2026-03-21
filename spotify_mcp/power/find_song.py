@@ -2,6 +2,7 @@
 
 import logging
 import re
+from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client
 from ..utils.pagination import search_with_pagination
 from ..utils.formatting import format_track_list
@@ -73,7 +74,7 @@ def _parse_description(description: str) -> dict:
         raw = decade_match.group(1)
         # Normalise short form: "90" -> "1990"
         if len(raw) == 2:
-            century = "19" if int(raw) >= 20 else "20"
+            century = "19" if int(raw) >= 30 else "20"
             raw = century + raw
         key = raw + "s"  # e.g. "1990s"
         year_range = DECADE_RANGES.get(key)
@@ -177,6 +178,6 @@ def register(mcp):
 
             return f"{header}\n\n{track_list}"
 
-        except Exception as exc:
+        except SpotifyException as exc:
             logger.error("spotify_find_song failed: %s", exc)
             return f"**Error:** {exc}"

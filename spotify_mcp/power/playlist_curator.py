@@ -2,6 +2,7 @@
 
 import logging
 import random
+from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client
 from ..utils.pagination import fetch_all_playlist_items, fetch_artist_albums
 from ..utils.formatting import format_track_list
@@ -38,7 +39,7 @@ def register(mcp):
         try:
             playlist_info = sp.playlist(playlist_id, fields="name")
             playlist_name = playlist_info.get("name", "Unknown")
-        except Exception as e:
+        except SpotifyException as e:
             return f"**Error:** Could not fetch playlist: {e}"
 
         all_items = fetch_all_playlist_items(sp, playlist_id)
@@ -183,7 +184,7 @@ def register(mcp):
             try:
                 playlist_info = sp.playlist(pid, fields="name")
                 source_names.append(playlist_info.get("name", pid))
-            except Exception as e:
+            except SpotifyException as e:
                 return f"**Error:** Could not fetch playlist `{pid}`: {e}"
 
             items = fetch_all_playlist_items(sp, pid)
@@ -267,7 +268,7 @@ def register(mcp):
         try:
             playlist_info = sp.playlist(playlist_id, fields="name")
             playlist_name = playlist_info.get("name", "Unknown")
-        except Exception as e:
+        except SpotifyException as e:
             return f"**Error:** Could not fetch playlist: {e}"
 
         all_items = fetch_all_playlist_items(sp, playlist_id)
@@ -302,7 +303,7 @@ def register(mcp):
             try:
                 related = sp.artist_related_artists(artist_id)
                 related_artists = related.get("artists", [])
-            except Exception:
+            except SpotifyException:
                 logger.warning("Failed to fetch related artists for %s", artist_id)
                 continue
 
@@ -321,7 +322,7 @@ def register(mcp):
                 # Fetch albums for this related artist
                 try:
                     albums = fetch_artist_albums(sp, ra_id, include_groups="album,single")
-                except Exception:
+                except SpotifyException:
                     logger.warning("Failed to fetch albums for related artist %s", ra_id)
                     continue
 
@@ -341,7 +342,7 @@ def register(mcp):
                             uri = t.get("uri")
                             if uri and uri not in existing_uris:
                                 candidate_uris.append(uri)
-                    except Exception:
+                    except SpotifyException:
                         logger.warning("Failed to fetch tracks for album %s", album_id)
                         continue
 

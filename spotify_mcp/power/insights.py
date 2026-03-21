@@ -4,9 +4,11 @@ import logging
 import time
 from collections import Counter
 from datetime import datetime
+from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_all_playlist_items
 from ..utils.formatting import format_time_distribution, format_genre_chart, ms_to_duration
+from ..config import SESSION_GAP_SECONDS
 from ..utils.uri_parser import parse_spotify_id
 
 logger = logging.getLogger(__name__)
@@ -31,7 +33,7 @@ def register(mcp):
 
         try:
             results = sp.current_user_recently_played(limit=50)
-        except Exception as e:
+        except SpotifyException as e:
             logger.error("Failed to fetch recently played: %s", e)
             return f"**Error:** Could not fetch recently played tracks — {e}"
 
@@ -70,7 +72,7 @@ def register(mcp):
         sessions = 1
         for i in range(1, len(sorted_ts)):
             gap = (sorted_ts[i] - sorted_ts[i - 1]).total_seconds()
-            if gap > 1800:  # 30 minutes
+            if gap > SESSION_GAP_SECONDS:
                 sessions += 1
 
         # Repeat/re-listen detection
@@ -161,7 +163,7 @@ def register(mcp):
 
         try:
             results = sp.current_user_top_artists(limit=50, time_range=time_range)
-        except Exception as e:
+        except SpotifyException as e:
             logger.error("Failed to fetch top artists: %s", e)
             return f"**Error:** Could not fetch top artists — {e}"
 
@@ -286,14 +288,14 @@ def register(mcp):
             try:
                 meta = sp.playlist(pid, fields="name")
                 playlist_names[pid] = meta.get("name", "Unknown")
-            except Exception as e:
+            except SpotifyException as e:
                 logger.error("Failed to fetch playlist %s: %s", pid, e)
                 return f"**Error:** Could not fetch playlist `{pid}` — {e}"
 
             try:
                 items = fetch_all_playlist_items(sp, pid)
                 playlist_tracks[pid] = items
-            except Exception as e:
+            except SpotifyException as e:
                 logger.error("Failed to fetch tracks for playlist %s: %s", pid, e)
                 return f"**Error:** Could not fetch tracks for playlist `{pid}` — {e}"
 

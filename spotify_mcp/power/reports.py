@@ -3,6 +3,7 @@
 import logging
 import time
 from collections import Counter
+from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_all_playlist_items
 from ..utils.formatting import format_track, format_artist, ms_to_duration
@@ -157,7 +158,7 @@ def register(mcp):
                 artist_data = get_artist_cached(sp, aid)
                 for genre in artist_data.get("genres", []):
                     genre_counter[genre] += 1
-            except Exception as e:
+            except SpotifyException as e:
                 logger.warning(f"Could not fetch artist {aid}: {e}")
             if i > 0 and i % API_BATCH_INTERVAL == 0:
                 time.sleep(API_SLEEP_SECONDS)

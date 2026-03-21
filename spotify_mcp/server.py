@@ -1,6 +1,7 @@
 import sys
 import logging
 from mcp.server.fastmcp import FastMCP
+from spotipy.exceptions import SpotifyException
 
 # Logging to stderr — critical for stdio transport (stdout is the MCP channel)
 logging.basicConfig(
@@ -53,7 +54,7 @@ def spotify_status() -> str:
                 lines.append(format_device(device))
         else:
             lines.append("**Playback:** Nothing currently playing")
-    except Exception as e:
+    except SpotifyException as e:
         lines.append(f"**Playback:** Could not fetch ({e})")
 
     return "\n".join(lines)

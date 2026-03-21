@@ -3,6 +3,7 @@
 import logging
 import random
 from datetime import datetime
+from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client
 from ..utils.pagination import search_with_pagination, fetch_artist_albums
 from ..utils.formatting import format_track_list
@@ -138,7 +139,7 @@ def register(mcp):
                         if "artists" not in t or not t["artists"]:
                             t["artists"] = [{"name": artist["name"]}]
                         collected_tracks.append(t)
-                except Exception as e:
+                except SpotifyException as e:
                     logger.warning(f"Error fetching tracks for artist {artist['name']}: {e}")
                     continue
 
@@ -170,7 +171,7 @@ def register(mcp):
 
             return "\n".join(lines)
 
-        except Exception as e:
+        except SpotifyException as e:
             logger.error(f"spotify_create_radio failed: {e}")
             return f"**Error:** {e}"
 
@@ -231,7 +232,7 @@ def register(mcp):
 
             return "\n".join(lines)
 
-        except Exception as e:
+        except SpotifyException as e:
             logger.error(f"spotify_time_capsule failed: {e}")
             return f"**Error:** {e}"
 
@@ -299,7 +300,7 @@ def register(mcp):
 
             return "\n".join(lines)
 
-        except Exception as e:
+        except SpotifyException as e:
             logger.error(f"spotify_vibe_playlist failed: {e}")
             return f"**Error:** {e}"
 
@@ -360,6 +361,6 @@ def register(mcp):
 
             return "\n".join(lines)
 
-        except Exception as e:
+        except SpotifyException as e:
             logger.error(f"spotify_era_playlist failed: {e}")
             return f"**Error:** {e}"

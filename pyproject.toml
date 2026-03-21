@@ -23,9 +23,14 @@ classifiers = [
     "Topic :: Multimedia :: Sound/Audio",
 ]
 dependencies = [
-    "mcp>=1.0.0",
-    "spotipy>=2.25.0",
-    "python-dotenv>=1.0.0",
+    "mcp>=1.0.0,<2.0.0",
+    "spotipy>=2.25.0,<3.0.0",
+    "python-dotenv>=1.0.0,<2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
 ]
 
 [project.urls]
@@ -39,3 +44,6 @@ spotify-mcp-setup = "spotify_mcp.cli:setup"
 
 [tool.hatch.build.targets.wheel]
 packages = ["spotify_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

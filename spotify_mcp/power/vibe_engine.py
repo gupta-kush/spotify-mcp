@@ -10,6 +10,7 @@ import random
 import time
 from collections import Counter
 
+from spotipy.exceptions import SpotifyException
 from ..utils.spotify_client import get_client, get_artist_cached
 from ..utils.pagination import fetch_all_playlist_items, search_with_pagination
 from ..utils.formatting import format_track_list, format_genre_chart
@@ -102,7 +103,7 @@ def register(mcp):
 
         try:
             playlist_info = sp.playlist(playlist_id, fields="name,tracks.total")
-        except Exception as e:
+        except SpotifyException as e:
             logger.error("Failed to fetch playlist %s: %s", playlist_id, e)
             return f"**Error:** Could not fetch playlist — {e}"
 
@@ -144,7 +145,7 @@ def register(mcp):
                 genres = artist_data.get("genres", [])
                 all_genres.extend(genres)
                 genre_counts.update(genres)
-            except Exception as e:
+            except SpotifyException as e:
                 logger.warning("Failed to fetch artist %s: %s", aid, e)
 
             # Throttle to avoid rate limits
@@ -235,7 +236,7 @@ def register(mcp):
 
         try:
             playlist_info = sp.playlist(source_playlist_id, fields="name")
-        except Exception as e:
+        except SpotifyException as e:
             logger.error("Failed to fetch playlist %s: %s", source_playlist_id, e)
             return f"**Error:** Could not fetch playlist — {e}"
 
@@ -271,7 +272,7 @@ def register(mcp):
                 artist_data = get_artist_cached(sp, aid)
                 genres = artist_data.get("genres", [])
                 genre_counts.update(genres)
-            except Exception as e:
+            except SpotifyException as e:
                 logger.warning("Failed to fetch artist %s: %s", aid, e)
             if (i + 1) % API_BATCH_INTERVAL == 0:
                 time.sleep(API_SLEEP_SECONDS)
@@ -299,7 +300,7 @@ def register(mcp):
                     if tid and tid not in existing_track_ids and tid not in seen_ids:
                         seen_ids.add(tid)
                         candidates.append(track)
-            except Exception as e:
+            except SpotifyException as e:
                 logger.warning("Search failed for genre '%s': %s", genre, e)
 
         if not candidates:

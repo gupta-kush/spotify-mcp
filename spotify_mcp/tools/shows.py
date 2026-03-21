@@ -2,6 +2,7 @@
 
 import logging
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.formatting import format_show, format_episode, ms_to_duration
 from ..utils.uri_parser import parse_spotify_id
 
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_saved_shows(limit: int = 20) -> str:
         """Get your saved/followed podcasts and shows.
 
@@ -35,6 +37,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_show(show_id: str) -> str:
         """Get detailed information about a podcast or show.
 
@@ -67,6 +70,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_show_episodes(show_id: str, limit: int = 20) -> str:
         """Get episodes of a podcast or show (newest first).
 
@@ -91,6 +95,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_save_shows(show_ids: list[str]) -> str:
         """Save podcasts/shows to your library.
 
@@ -107,6 +112,7 @@ def register(mcp):
         return f"Saved {len(ids)} show(s) to your library."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_remove_saved_shows(show_ids: list[str]) -> str:
         """Remove podcasts/shows from your library.
 
@@ -123,6 +129,7 @@ def register(mcp):
         return f"Removed {len(ids)} show(s) from your library."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_check_saved_shows(show_ids: list[str]) -> str:
         """Check which shows are saved in your library.
 
@@ -143,6 +150,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_save_episodes(episode_ids: list[str]) -> str:
         """Save podcast episodes to your library.
 
@@ -159,6 +167,7 @@ def register(mcp):
         return f"Saved {len(ids)} episode(s) to your library."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_episode(episode_id: str) -> str:
         """Get detailed information about a podcast episode.
 

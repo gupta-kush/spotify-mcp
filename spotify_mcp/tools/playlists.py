@@ -2,6 +2,7 @@
 
 import logging
 from ..utils.spotify_client import get_client
+from ..utils.errors import catch_spotify_errors
 from ..utils.formatting import (
     format_playlist_summary, format_playlist_list,
     format_track_list, ms_to_duration,
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 def register(mcp):
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_my_playlists(limit: int = 50) -> str:
         """List your Spotify playlists.
 
@@ -33,6 +35,7 @@ def register(mcp):
         return header + format_playlist_list(playlists)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_playlist(playlist_id: str) -> str:
         """Get details about a specific playlist including its tracks.
 
@@ -65,6 +68,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_playlist_tracks(
         playlist_id: str,
         limit: int = 100,
@@ -89,6 +93,7 @@ def register(mcp):
         return header + format_track_list(tracks)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_create_playlist(
         name: str,
         description: str = "",
@@ -116,6 +121,7 @@ def register(mcp):
         return f"Created playlist **{name}**\nID: `{pid}`\nURL: {url}"
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_add_to_playlist(
         playlist_id: str,
         uris: list[str],
@@ -143,6 +149,7 @@ def register(mcp):
         return f"Added {len(uris)} track(s) to playlist `{playlist_id}`."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_remove_from_playlist(
         playlist_id: str,
         uris: list[str],
@@ -164,6 +171,7 @@ def register(mcp):
         return f"Removed {len(uris)} track(s) from playlist `{playlist_id}`."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_reorder_playlist(
         playlist_id: str,
         range_start: int,
@@ -194,6 +202,7 @@ def register(mcp):
         )
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_update_playlist(
         playlist_id: str,
         name: str = None,
@@ -233,6 +242,7 @@ def register(mcp):
         return f"Updated playlist `{playlist_id}`: {', '.join(changes)}"
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_follow_playlist(playlist_id: str) -> str:
         """Follow a playlist.
 
@@ -244,6 +254,7 @@ def register(mcp):
         return f"Now following playlist `{playlist_id}`."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_unfollow_playlist(playlist_id: str) -> str:
         """Unfollow a playlist.
 
@@ -255,6 +266,7 @@ def register(mcp):
         return f"Unfollowed playlist `{playlist_id}`."
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_get_playlist_cover(playlist_id: str) -> str:
         """Get a playlist's cover image URL.
 
@@ -275,6 +287,7 @@ def register(mcp):
         return "\n".join(lines)
 
     @mcp.tool()
+    @catch_spotify_errors
     def spotify_check_playlist_followers(playlist_id: str, user_ids: list[str]) -> str:
         """Check if specific users follow a playlist.
 

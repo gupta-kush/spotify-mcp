@@ -90,28 +90,3 @@ def parse_spotify_id(input_str: str, expected_type: str | None = None) -> str:
         "URL (https://open.spotify.com/type/id), "
         "or a 22-character alphanumeric ID."
     )
-
-
-def ensure_uri(input_str: str, resource_type: str) -> str:
-    """Convert any Spotify identifier format to a full spotify:{type}:{id} URI.
-
-    Args:
-        input_str: A Spotify URI, URL, or bare ID.
-        resource_type: The resource type (track, album, artist, playlist, show, episode).
-
-    Returns:
-        A URI in the format spotify:{resource_type}:{id}.
-
-    Raises:
-        ValueError: If resource_type is invalid or the input cannot be parsed.
-    """
-    if resource_type not in VALID_TYPES:
-        raise ValueError(
-            f"Invalid resource_type '{resource_type}'. "
-            f"Must be one of: {', '.join(sorted(VALID_TYPES))}"
-        )
-
-    parsed_id = parse_spotify_id(input_str, expected_type=resource_type)
-    uri = f"spotify:{resource_type}:{parsed_id}"
-    logger.debug("Ensured URI: %s", uri)
-    return uri
