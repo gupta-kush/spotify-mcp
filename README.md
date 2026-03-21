@@ -1,3 +1,4 @@
+<!-- mcp-name: io.github.gupta-kush/spotify-mcp -->
 # Spotify MCP Server
 
 [![PyPI](https://img.shields.io/pypi/v/spotify-mcp)](https://pypi.org/project/spotify-mcp/)

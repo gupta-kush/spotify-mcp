@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.gupta-kush/spotify-mcp",
+  "title": "Spotify MCP Server",
+  "description": "93-tool Spotify MCP server with smart shuffle, natural language song search, vibe analysis, artist network mapping, taste evolution tracking, and playlist power tools. Works after Spotify's Feb 2026 API changes.",
+  "repository": {
+    "url": "https://github.com/gupta-kush/spotify-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "spotify-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SPOTIFY_CLIENT_ID",
+          "description": "Spotify API client ID from developer.spotify.com/dashboard",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "SPOTIFY_CLIENT_SECRET",
+          "description": "Spotify API client secret (optional — PKCE auth works without it)",
+          "isRequired": false,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
