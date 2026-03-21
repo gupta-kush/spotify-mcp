@@ -19,4 +19,4 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e ".[dev]"
-      - run: pytest
+      - run: pytest --cov=spotify_mcp --cov-report=term-missing

@@ -31,12 +31,14 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/gupta-kush/spotify-mcp"
 Repository = "https://github.com/gupta-kush/spotify-mcp"
 Issues = "https://github.com/gupta-kush/spotify-mcp/issues"
+Changelog = "https://github.com/gupta-kush/spotify-mcp/blob/main/CHANGELOG.md"
 
 [project.scripts]
 spotify-mcp = "spotify_mcp.server:main"
