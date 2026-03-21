@@ -106,18 +106,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_find_song(description: str, limit: int = 10) -> str:
-        """Find songs using a natural-language description.
-
-        Parses the description for quoted titles, artist names (via "by" or
-        "from"), decade references, and genre keywords, then builds a
-        structured Spotify query.  A backup raw-text search is also performed
-        and results are merged and deduplicated.
-
-        Args:
-            description: Free-text description of the song you're looking for.
-                         Use quotes around the title, e.g. '"Bohemian Rhapsody" by Queen'.
-            limit: Max results to return (1-20, default 10).
-        """
+        """Find songs using a natural-language description. Parses quoted titles, "by artist", decade refs, and genre keywords."""
         try:
             sp = get_client()
             limit = max(1, min(20, limit))

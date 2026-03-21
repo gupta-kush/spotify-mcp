@@ -22,17 +22,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_listening_report(time_range: str = "medium_term") -> str:
-        """Generate a comprehensive listening profile report.
-
-        Combines your top tracks, top artists, genre breakdown, and recent
-        listening activity into a single formatted report.
-
-        Args:
-            time_range: Time period to analyze.
-                        "short_term" = last 4 weeks,
-                        "medium_term" = last 6 months (default),
-                        "long_term" = all time.
-        """
+        """Generate a listening report combining top tracks, top artists, genre breakdown, and recent activity."""
         if time_range not in VALID_TIME_RANGES:
             return f"**Error:** time_range must be one of: {', '.join(VALID_TIME_RANGES.keys())}"
 
@@ -101,14 +91,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_playlist_analysis(playlist_id: str) -> str:
-        """Analyze a playlist's composition: genres, artists, decades, duration.
-
-        Since Spotify removed audio features from the API, this analysis uses
-        artist genres and album release dates instead of danceability/energy/etc.
-
-        Args:
-            playlist_id: Spotify playlist ID to analyze.
-        """
+        """Analyze a playlist's composition including top artists, genre distribution, decades, and duration."""
         sp = get_client()
         playlist_info = sp.playlist(playlist_id, fields="name,tracks.total")
         playlist_name = playlist_info.get("name", "Unknown")
@@ -212,11 +195,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_taste_evolution() -> str:
-        """Analyze how your music taste has evolved over time.
-
-        Compares your top artists and tracks across three time ranges
-        (4 weeks, 6 months, all time) to identify trends.
-        """
+        """Compare your top artists and genres across short, medium, and long term to identify taste trends."""
         sp = get_client()
 
         periods = {

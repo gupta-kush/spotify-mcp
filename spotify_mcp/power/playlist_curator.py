@@ -21,18 +21,7 @@ def register(mcp):
         remove_duplicates: bool = True,
         dry_run: bool = True,
     ) -> str:
-        """Find and optionally remove unavailable and duplicate tracks from a playlist.
-
-        Scans the entire playlist for tracks that are no longer playable and
-        for duplicate entries (by Spotify URI, keeping the first occurrence).
-
-        Args:
-            playlist_id: Spotify playlist ID or URI.
-            remove_unavailable: If True, include unavailable/unplayable tracks in cleanup.
-            remove_duplicates: If True, include duplicate tracks in cleanup.
-            dry_run: If True (default), only reports findings without making changes.
-                     Set to False to actually remove the identified tracks.
-        """
+        """Find and optionally remove unavailable and duplicate tracks from a playlist. Set dry_run=False to apply."""
         sp = get_client()
         playlist_id = parse_spotify_id(playlist_id)
 
@@ -155,16 +144,7 @@ def register(mcp):
         playlist_ids: list[str],
         name: str,
     ) -> str:
-        """Create a new playlist by interleaving tracks from multiple playlists.
-
-        Takes 2-5 playlists and creates a new one by round-robin picking one
-        track from each source playlist in rotation. Duplicates across playlists
-        are removed (first occurrence kept).
-
-        Args:
-            playlist_ids: List of 2-5 Spotify playlist IDs or URIs.
-            name: Name for the new interleaved playlist.
-        """
+        """Create a new playlist by round-robin interleaving tracks from 2-5 source playlists."""
         if len(playlist_ids) < 2 or len(playlist_ids) > 5:
             return "**Error:** Provide between 2 and 5 playlist IDs."
 
@@ -248,17 +228,7 @@ def register(mcp):
         name: str = None,
         track_count: int = 30,
     ) -> str:
-        """Generate a radio-style playlist based on an existing playlist's artists.
-
-        Analyzes the source playlist to find the most frequent artists, discovers
-        their related artists, and builds a new playlist from those related artists'
-        catalogs — excluding any tracks already in the source playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID or URI of the source playlist.
-            name: Name for the new radio playlist. Defaults to "{source_name} Radio".
-            track_count: Number of tracks for the radio playlist (1-50, default 30).
-        """
+        """Generate a radio playlist from an existing playlist's top artists and their related artists, excluding existing tracks."""
         track_count = max(1, min(50, track_count))
 
         sp = get_client()

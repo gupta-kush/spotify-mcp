@@ -89,15 +89,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_playlist_vibe(playlist_id: str) -> str:
-        """Analyze a playlist's vibe based on artist genres.
-
-        Since Spotify audio features are no longer available, this uses
-        artist genre data and curated energy estimates to determine the
-        overall mood, energy, and genre makeup of a playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID or URI.
-        """
+        """Analyze a playlist's vibe, energy, and genre makeup using artist genre data."""
         sp = get_client()
         playlist_id = parse_spotify_id(playlist_id)
 
@@ -221,15 +213,7 @@ def register(mcp):
         source_playlist_id: str,
         limit: int = 20,
     ) -> str:
-        """Find tracks that match a playlist's vibe based on its genre profile.
-
-        Analyzes the source playlist's genre makeup and searches for tracks
-        in those genres that are not already in the playlist.
-
-        Args:
-            source_playlist_id: Spotify playlist ID or URI of the source playlist.
-            limit: Number of matching tracks to return (1-30, default 20).
-        """
+        """Find tracks that match a playlist's vibe by searching its top genres, excluding existing tracks."""
         sp = get_client()
         limit = max(1, min(30, limit))
         source_playlist_id = parse_spotify_id(source_playlist_id)

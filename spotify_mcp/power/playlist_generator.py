@@ -63,18 +63,7 @@ def register(mcp):
         name: str = None,
         limit: int = 30,
     ) -> str:
-        """Create a radio-style playlist from a seed track or artist.
-
-        Builds the playlist by finding related artists, sampling their recent
-        albums, and collecting tracks — similar to Spotify's radio feature.
-
-        Args:
-            seed_uri: Spotify URI or ID for a track or artist.
-                      Examples: "spotify:track:4uLU6...", "spotify:artist:0OdUW...",
-                      or just the raw ID (treated as a track).
-            name: Custom playlist name. Defaults to "{Artist} Radio".
-            limit: Number of tracks (1-50). Default 30.
-        """
+        """Create a radio-style playlist from a seed track or artist by sampling related artists' catalogs."""
         limit = max(1, min(50, limit))
         sp = get_client()
 
@@ -180,18 +169,7 @@ def register(mcp):
         time_range: str = "medium_term",
         name: str = None,
     ) -> str:
-        """Create a playlist snapshot of your current top tracks.
-
-        Captures your most-played tracks into a private playlist — a musical
-        time capsule you can revisit later to remember what you were listening to.
-
-        Args:
-            time_range: Listening period to capture.
-                        "short_term" = last 4 weeks,
-                        "medium_term" = last 6 months (default),
-                        "long_term" = all time.
-            name: Custom playlist name. Defaults to "My Time Capsule (Mon YYYY — period)".
-        """
+        """Snapshot your current top tracks into a private playlist as a musical time capsule."""
         valid_ranges = {
             "short_term": "4 weeks",
             "medium_term": "6 months",
@@ -242,16 +220,7 @@ def register(mcp):
         name: str = None,
         limit: int = 30,
     ) -> str:
-        """Create a playlist matching a specific mood or vibe.
-
-        Searches across mood-associated genres to build a thematic playlist.
-
-        Args:
-            mood: Target mood/vibe. Available moods:
-                  happy, sad, energetic, chill, focused, romantic, angry, party.
-            name: Custom playlist name. Defaults to "{Mood} Vibes".
-            limit: Number of tracks (1-50). Default 30.
-        """
+        """Create a playlist matching a mood (happy, sad, energetic, chill, focused, romantic, angry, party)."""
         limit = max(1, min(50, limit))
         mood_lower = mood.lower().strip()
 
@@ -310,16 +279,7 @@ def register(mcp):
         name: str = None,
         limit: int = 30,
     ) -> str:
-        """Create a playlist of tracks from a specific decade.
-
-        Searches for tracks released within the given decade's year range.
-
-        Args:
-            decade: Target decade. Available decades:
-                    1960s, 1970s, 1980s, 1990s, 2000s, 2010s, 2020s.
-            name: Custom playlist name. Defaults to "{Decade} Mix".
-            limit: Number of tracks (1-50). Default 30.
-        """
+        """Create a playlist of tracks from a specific decade (1960s through 2020s)."""
         limit = max(1, min(50, limit))
         decade_key = decade.strip()
 

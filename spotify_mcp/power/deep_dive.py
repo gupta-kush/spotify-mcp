@@ -12,15 +12,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_artist_deep_dive(artist_id: str) -> str:
-        """Get a comprehensive profile of an artist.
-
-        Includes their genres, full discography overview, and related artists.
-        Note: Artist top tracks and popularity are unavailable in the current
-        Spotify API (removed Feb 2026).
-
-        Args:
-            artist_id: Spotify artist ID. Get this from search results.
-        """
+        """Get a comprehensive artist profile including genres, full discography, and related artists."""
         sp = get_client()
 
         # Basic info

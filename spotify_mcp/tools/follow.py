@@ -15,11 +15,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_follow_artists(artist_ids: list[str]) -> str:
-        """Follow one or more artists.
-
-        Args:
-            artist_ids: List of Spotify artist IDs or URIs. Max 50 per call.
-        """
+        """Follow one or more artists (max 50 per call)."""
         if not artist_ids:
             return "**Error:** No artist IDs provided."
         if len(artist_ids) > 50:
@@ -32,11 +28,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_unfollow_artists(artist_ids: list[str]) -> str:
-        """Unfollow one or more artists.
-
-        Args:
-            artist_ids: List of Spotify artist IDs or URIs. Max 50 per call.
-        """
+        """Unfollow one or more artists (max 50 per call)."""
         if not artist_ids:
             return "**Error:** No artist IDs provided."
         if len(artist_ids) > 50:
@@ -49,11 +41,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_followed_artists(limit: int = 20) -> str:
-        """Get your followed artists.
-
-        Args:
-            limit: Maximum number of artists to return (1-50). Default 20.
-        """
+        """Get your followed artists (up to 50)."""
         limit = max(1, min(50, limit))
         sp = get_client()
         artists = fetch_followed_artists(sp, limit)
@@ -65,11 +53,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_check_following_artists(artist_ids: list[str]) -> str:
-        """Check if you follow specific artists.
-
-        Args:
-            artist_ids: List of Spotify artist IDs or URIs to check. Max 50 per call.
-        """
+        """Check if you follow specific artists (max 50 per call)."""
         if not artist_ids:
             return "**Error:** No artist IDs provided."
         if len(artist_ids) > 50:
@@ -86,11 +70,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_check_following_users(user_ids: list[str]) -> str:
-        """Check if you follow specific Spotify users.
-
-        Args:
-            user_ids: List of Spotify user IDs to check.
-        """
+        """Check if you follow specific Spotify users."""
         if not user_ids:
             return "**Error:** No user IDs provided."
         sp = get_client()
@@ -104,11 +84,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_follow_users(user_ids: list[str]) -> str:
-        """Follow one or more Spotify users.
-
-        Args:
-            user_ids: List of Spotify user IDs to follow.
-        """
+        """Follow one or more Spotify users."""
         if not user_ids:
             return "**Error:** No user IDs provided."
         sp = get_client()
@@ -118,11 +94,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_unfollow_users(user_ids: list[str]) -> str:
-        """Unfollow one or more Spotify users.
-
-        Args:
-            user_ids: List of Spotify user IDs to unfollow.
-        """
+        """Unfollow one or more Spotify users."""
         if not user_ids:
             return "**Error:** No user IDs provided."
         sp = get_client()

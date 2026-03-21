@@ -20,15 +20,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_listening_patterns() -> str:
-        """Analyze your recent listening patterns.
-
-        Examines your last 50 played tracks to reveal:
-        - Hour-of-day listening distribution
-        - Day-of-week distribution
-        - Listening sessions (gaps > 30 min = new session)
-        - Repeat/re-listen detection
-        - Most active hours
-        """
+        """Analyze recent listening patterns: time-of-day, day-of-week, sessions, and repeat plays."""
         sp = get_client()
 
         try:
@@ -145,16 +137,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_taste_profile(time_range: str = "medium_term") -> str:
-        """Generate a taste profile based on your top artists.
-
-        Analyzes your top 50 artists to build a genre profile, diversity
-        score, and identify niche artists in your library.
-
-        Args:
-            time_range: One of "short_term" (last 4 weeks),
-                        "medium_term" (last 6 months), or
-                        "long_term" (all time). Defaults to "medium_term".
-        """
+        """Build a genre taste profile with diversity score and niche artist detection from your top artists."""
         valid_ranges = ("short_term", "medium_term", "long_term")
         if time_range not in valid_ranges:
             return f"**Error:** Invalid time_range '{time_range}'. Must be one of: {', '.join(valid_ranges)}"
@@ -263,14 +246,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_playlist_compare(playlist_ids: list[str]) -> str:
-        """Compare 2-5 playlists side by side.
-
-        Finds shared tracks, shared artists, unique tracks per playlist,
-        and shows a size/duration comparison table.
-
-        Args:
-            playlist_ids: List of 2-5 Spotify playlist IDs to compare.
-        """
+        """Compare 2-5 playlists side by side: shared tracks, shared artists, unique tracks, and size/duration."""
         if len(playlist_ids) < 2 or len(playlist_ids) > 5:
             return "**Error:** Please provide between 2 and 5 playlist IDs."
 

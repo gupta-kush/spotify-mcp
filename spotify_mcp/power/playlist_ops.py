@@ -14,15 +14,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_deduplicate_playlist(playlist_id: str, dry_run: bool = True) -> str:
-        """Find and optionally remove duplicate tracks from a playlist.
-
-        Detects duplicates by Spotify track URI (exact same track).
-
-        Args:
-            playlist_id: Spotify playlist ID.
-            dry_run: If True (default), only reports duplicates without removing them.
-                     Set to False to actually remove duplicates (keeps first occurrence).
-        """
+        """Find and optionally remove duplicate tracks from a playlist. Set dry_run=False to remove."""
         sp = get_client()
         all_items = fetch_all_playlist_items(sp, playlist_id)
 
@@ -112,15 +104,7 @@ def register(mcp):
         target_name: str,
         deduplicate: bool = True,
     ) -> str:
-        """Merge multiple playlists into a new playlist.
-
-        Args:
-            source_playlist_ids: List of playlist IDs to merge.
-            target_name: Name for the new merged playlist.
-            deduplicate: If True (default), removes duplicate tracks across sources.
-
-        Creates a new private playlist with all tracks from the source playlists.
-        """
+        """Merge multiple playlists into one new playlist, removing duplicates by default."""
         if len(source_playlist_ids) < 2:
             return "**Error:** Need at least 2 playlist IDs to merge."
 
@@ -178,16 +162,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_split_playlist_by_artist(playlist_id: str) -> str:
-        """Split a playlist into sub-playlists grouped by primary artist.
-
-        Creates a new playlist for each artist that has 3 or more tracks
-        in the original playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID to split.
-
-        Artists with fewer than 3 tracks are grouped into a "Various" playlist.
-        """
+        """Split a playlist into per-artist sub-playlists. Artists with fewer than 3 tracks go into a "Various" playlist."""
         sp = get_client()
         user_id = sp.me()["id"]
         playlist = sp.playlist(playlist_id, fields="name")
@@ -236,14 +211,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_playlist_diff(playlist_id_a: str, playlist_id_b: str) -> str:
-        """Compare two playlists and show differences.
-
-        Args:
-            playlist_id_a: First playlist ID.
-            playlist_id_b: Second playlist ID.
-
-        Shows tracks unique to each playlist and tracks they share.
-        """
+        """Compare two playlists, showing tracks unique to each and tracks they share."""
         sp = get_client()
         pl_a = sp.playlist(playlist_id_a, fields="name")
         pl_b = sp.playlist(playlist_id_b, fields="name")
@@ -299,13 +267,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_export_playlist(playlist_id: str) -> str:
-        """Export a playlist as a formatted text list for backup or sharing.
-
-        Args:
-            playlist_id: Spotify playlist ID.
-
-        Returns every track with artist and album info in a copy-paste-friendly format.
-        """
+        """Export a playlist as a formatted text list with artist, album, and duration for each track."""
         sp = get_client()
         playlist = sp.playlist(playlist_id, fields="name")
         playlist_name = playlist.get("name", "Unknown")
@@ -335,15 +297,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_find_playlist_overlaps(min_shared: int = 1, owner_only: bool = True) -> str:
-        """Scan all your playlists and find which ones share tracks.
-
-        Compares every pair of playlists and ranks them by overlap.
-        Use this to find redundant playlists that could be merged.
-
-        Args:
-            min_shared: Minimum number of shared tracks to report (default 1).
-            owner_only: If True (default), only checks playlists you created (skips followed/collaborative playlists).
-        """
+        """Scan all your playlists and find which pairs share tracks, ranked by overlap."""
         sp = get_client()
         me = sp.me()
         my_id = me.get("id", "")

@@ -14,11 +14,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_saved_shows(limit: int = 20) -> str:
-        """Get your saved/followed podcasts and shows.
-
-        Args:
-            limit: Number of shows to return (1-50). Default 20.
-        """
+        """Get your saved/followed podcasts and shows (up to 50)."""
         limit = max(1, min(50, limit))
         sp = get_client()
         results = sp.current_user_saved_shows(limit=limit)
@@ -39,11 +35,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_show(show_id: str) -> str:
-        """Get detailed information about a podcast or show.
-
-        Args:
-            show_id: Spotify show ID or URI.
-        """
+        """Get detailed information about a podcast or show."""
         sp = get_client()
         show_id = parse_spotify_id(show_id)
         show = sp.show(show_id)
@@ -72,12 +64,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_show_episodes(show_id: str, limit: int = 20) -> str:
-        """Get episodes of a podcast or show (newest first).
-
-        Args:
-            show_id: Spotify show ID or URI.
-            limit: Number of episodes to return (1-50). Default 20.
-        """
+        """Get episodes of a show, newest first (up to 50)."""
         limit = max(1, min(50, limit))
         sp = get_client()
         show_id = parse_spotify_id(show_id)
@@ -97,11 +84,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_save_shows(show_ids: list[str]) -> str:
-        """Save podcasts/shows to your library.
-
-        Args:
-            show_ids: List of Spotify show IDs or URIs. Max 50 per call.
-        """
+        """Save shows to your library (max 50 per call)."""
         if not show_ids:
             return "**Error:** No show IDs provided."
         if len(show_ids) > 50:
@@ -114,11 +97,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_remove_saved_shows(show_ids: list[str]) -> str:
-        """Remove podcasts/shows from your library.
-
-        Args:
-            show_ids: List of Spotify show IDs or URIs. Max 50 per call.
-        """
+        """Remove shows from your library (max 50 per call)."""
         if not show_ids:
             return "**Error:** No show IDs provided."
         if len(show_ids) > 50:
@@ -131,11 +110,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_check_saved_shows(show_ids: list[str]) -> str:
-        """Check which shows are saved in your library.
-
-        Args:
-            show_ids: List of Spotify show IDs or URIs to check. Max 50 per call.
-        """
+        """Check which shows are saved in your library (max 50 per call)."""
         if not show_ids:
             return "**Error:** No show IDs provided."
         if len(show_ids) > 50:
@@ -152,11 +127,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_save_episodes(episode_ids: list[str]) -> str:
-        """Save podcast episodes to your library.
-
-        Args:
-            episode_ids: List of Spotify episode IDs or URIs. Max 50 per call.
-        """
+        """Save podcast episodes to your library (max 50 per call)."""
         if not episode_ids:
             return "**Error:** No episode IDs provided."
         if len(episode_ids) > 50:
@@ -169,11 +140,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_episode(episode_id: str) -> str:
-        """Get detailed information about a podcast episode.
-
-        Args:
-            episode_id: Spotify episode ID or URI.
-        """
+        """Get detailed information about a podcast episode."""
         sp = get_client()
         episode_id = parse_spotify_id(episode_id)
         ep = sp.episode(episode_id)

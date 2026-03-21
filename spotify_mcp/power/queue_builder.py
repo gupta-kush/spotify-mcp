@@ -15,13 +15,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_build_queue(uris: list[str]) -> str:
-        """Add multiple tracks to the playback queue in order.
-
-        Args:
-            uris: List of Spotify track URIs to queue. Max 50.
-
-        Requires an active Spotify device.
-        """
+        """Add multiple tracks (max 50) to the playback queue in order. Requires an active device."""
         if not uris:
             return "**Error:** No URIs provided."
         if len(uris) > 50:
@@ -56,15 +50,7 @@ def register(mcp):
         count: int = 10,
         shuffle: bool = True,
     ) -> str:
-        """Queue tracks from a playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID.
-            count: Number of tracks to queue (1-50). Default 10.
-            shuffle: If True, randomly select tracks. If False, take from the start.
-
-        Requires an active Spotify device.
-        """
+        """Queue tracks from a playlist, optionally shuffled. Requires an active device."""
         count = max(1, min(50, count))
         sp = get_client()
 

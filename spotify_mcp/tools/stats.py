@@ -22,15 +22,7 @@ def register(mcp):
         time_range: str = "medium_term",
         limit: int = 20,
     ) -> str:
-        """Get your most-listened-to tracks.
-
-        Args:
-            time_range: Time period to analyze.
-                        "short_term" = last 4 weeks,
-                        "medium_term" = last 6 months (default),
-                        "long_term" = all time.
-            limit: Number of tracks to return (1-50). Default 20.
-        """
+        """Get your top tracks by time range (short_term/medium_term/long_term), up to 50."""
         if time_range not in VALID_TIME_RANGES:
             return f"**Error:** time_range must be one of: {', '.join(VALID_TIME_RANGES.keys())}"
         limit = max(1, min(50, limit))
@@ -49,15 +41,7 @@ def register(mcp):
         time_range: str = "medium_term",
         limit: int = 20,
     ) -> str:
-        """Get your most-listened-to artists.
-
-        Args:
-            time_range: Time period to analyze.
-                        "short_term" = last 4 weeks,
-                        "medium_term" = last 6 months (default),
-                        "long_term" = all time.
-            limit: Number of artists to return (1-50). Default 20.
-        """
+        """Get your top artists by time range (short_term/medium_term/long_term), up to 50."""
         if time_range not in VALID_TIME_RANGES:
             return f"**Error:** time_range must be one of: {', '.join(VALID_TIME_RANGES.keys())}"
         limit = max(1, min(50, limit))
@@ -73,13 +57,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_recently_played(limit: int = 20) -> str:
-        """Get your recently played tracks.
-
-        Args:
-            limit: Number of tracks to return (1-50). Default 20.
-
-        Shows tracks in reverse chronological order with timestamps.
-        """
+        """Get your recently played tracks in reverse chronological order, up to 50."""
         limit = max(1, min(50, limit))
         sp = get_client()
         results = sp.current_user_recently_played(limit=limit)

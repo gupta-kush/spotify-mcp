@@ -25,16 +25,7 @@ def register(mcp):
         sort_by: str = "artist_name",
         reverse: bool = False,
     ) -> str:
-        """Sort a playlist by a chosen field.
-
-        Args:
-            playlist_id: Spotify playlist ID.
-            sort_by: Field to sort by — "track_name", "artist_name", "album_name",
-                     "duration", or "date_added". Default "artist_name".
-            reverse: If True, reverse the sort order. Default False.
-
-        This replaces ALL tracks in the playlist with the sorted version.
-        """
+        """Sort a playlist by track_name, artist_name, album_name, duration, or date_added."""
         if sort_by not in SORT_OPTIONS:
             available = "\n".join(f"- **{k}**: {v}" for k, v in SORT_OPTIONS.items())
             return f"**Error:** Unknown sort option '{sort_by}'. Available:\n{available}"

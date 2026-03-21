@@ -14,14 +14,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_saved_tracks(limit: int = 50, offset: int = 0) -> str:
-        """Get your liked/saved tracks.
-
-        Args:
-            limit: Number of tracks to return (1-50). Default 50.
-            offset: Starting position for pagination (0-indexed). Default 0.
-
-        Use offset to page through your library.
-        """
+        """Get your liked/saved tracks with pagination (limit up to 50, offset for paging)."""
         limit = max(1, min(50, limit))
         sp = get_client()
         results = sp.current_user_saved_tracks(limit=limit, offset=offset)
@@ -36,12 +29,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_save_tracks(uris: list[str]) -> str:
-        """Save tracks to your Liked Songs library.
-
-        Args:
-            uris: List of Spotify track URIs to save (e.g., ["spotify:track:xxx"]).
-                  Max 50 per call.
-        """
+        """Save tracks to your Liked Songs (max 50 URIs per call)."""
         if not uris:
             return "**Error:** No track URIs provided."
         if len(uris) > 50:
@@ -56,12 +44,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_remove_saved_tracks(uris: list[str]) -> str:
-        """Remove tracks from your Liked Songs library.
-
-        Args:
-            uris: List of Spotify track URIs to remove (e.g., ["spotify:track:xxx"]).
-                  Max 50 per call.
-        """
+        """Remove tracks from your Liked Songs (max 50 URIs per call)."""
         if not uris:
             return "**Error:** No track URIs provided."
         if len(uris) > 50:
@@ -75,12 +58,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_saved_albums(limit: int = 20, offset: int = 0) -> str:
-        """Get your saved albums.
-
-        Args:
-            limit: Number of albums to return (1-50). Default 20.
-            offset: Starting position for pagination (0-indexed). Default 0.
-        """
+        """Get your saved albums with pagination (limit up to 50, offset for paging)."""
         limit = max(1, min(50, limit))
         sp = get_client()
         results = sp.current_user_saved_albums(limit=limit, offset=offset)
@@ -98,11 +76,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_save_albums(album_ids: list[str]) -> str:
-        """Save albums to your library.
-
-        Args:
-            album_ids: List of Spotify album IDs or URIs. Max 50 per call.
-        """
+        """Save albums to your library (max 50 per call)."""
         if not album_ids:
             return "**Error:** No album IDs provided."
         if len(album_ids) > 50:
@@ -115,11 +89,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_remove_saved_albums(album_ids: list[str]) -> str:
-        """Remove albums from your library.
-
-        Args:
-            album_ids: List of Spotify album IDs or URIs. Max 50 per call.
-        """
+        """Remove albums from your library (max 50 per call)."""
         if not album_ids:
             return "**Error:** No album IDs provided."
         if len(album_ids) > 50:
@@ -132,11 +102,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_check_saved_tracks(track_ids: list[str]) -> str:
-        """Check which tracks are saved in your Liked Songs.
-
-        Args:
-            track_ids: List of Spotify track IDs or URIs to check. Max 50 per call.
-        """
+        """Check which tracks are in your Liked Songs (max 50 per call)."""
         if not track_ids:
             return "**Error:** No track IDs provided."
         if len(track_ids) > 50:
@@ -153,11 +119,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_check_saved_albums(album_ids: list[str]) -> str:
-        """Check which albums are saved in your library.
-
-        Args:
-            album_ids: List of Spotify album IDs or URIs to check. Max 50 per call.
-        """
+        """Check which albums are saved in your library (max 50 per call)."""
         if not album_ids:
             return "**Error:** No album IDs provided."
         if len(album_ids) > 50:
@@ -174,11 +136,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_saved_episodes(limit: int = 20) -> str:
-        """Get your saved podcast episodes.
-
-        Args:
-            limit: Number of episodes to return (1-50). Default 20.
-        """
+        """Get your saved podcast episodes (up to 50)."""
         limit = max(1, min(50, limit))
         sp = get_client()
         results = sp.current_user_saved_episodes(limit=limit)

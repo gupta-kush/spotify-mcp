@@ -37,14 +37,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_artist_timeline(artist_id: str) -> str:
-        """Map an artist's full release timeline, grouped by year.
-
-        Shows career span, release counts by type (album/single/compilation),
-        and a chronological list of every release with type badges.
-
-        Args:
-            artist_id: Spotify artist ID. Get this from search results.
-        """
+        """Map an artist's full release timeline grouped by year, with career span and release type counts."""
         try:
             sp = get_client()
 
@@ -118,16 +111,7 @@ def register(mcp):
 
     @mcp.tool()
     def spotify_artist_network(artist_id: str, depth: int = 1) -> str:
-        """Map an artist's network of related artists.
-
-        Depth 1 shows direct related artists. Depth 2 extends to related
-        artists of the top 5 related artists, revealing bridge artists
-        (those appearing in multiple related lists) and shared genres.
-
-        Args:
-            artist_id: Spotify artist ID. Get this from search results.
-            depth: Network depth — 1 for direct only, 2 for extended (default 1).
-        """
+        """Map an artist's network of related artists. Depth 2 reveals bridge artists connecting different parts of the network."""
         depth = max(1, min(2, depth))
 
         try:

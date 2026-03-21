@@ -14,11 +14,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_track(track_id: str) -> str:
-        """Get detailed information about a track.
-
-        Args:
-            track_id: Spotify track ID or URI.
-        """
+        """Get detailed information about a track."""
         sp = get_client()
         track_id = parse_spotify_id(track_id)
         track = sp.track(track_id)
@@ -56,11 +52,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_album(album_id: str) -> str:
-        """Get detailed information about an album including its tracklist.
-
-        Args:
-            album_id: Spotify album ID or URI.
-        """
+        """Get detailed information about an album including its tracklist."""
         sp = get_client()
         album_id = parse_spotify_id(album_id)
         album = sp.album(album_id)
@@ -114,11 +106,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_artist(artist_id: str) -> str:
-        """Get detailed information about an artist.
-
-        Args:
-            artist_id: Spotify artist ID or URI.
-        """
+        """Get detailed information about an artist."""
         sp = get_client()
         artist_id = parse_spotify_id(artist_id)
         artist = sp.artist(artist_id)
@@ -149,11 +137,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_user(user_id: str) -> str:
-        """Get a Spotify user's public profile.
-
-        Args:
-            user_id: Spotify user ID.
-        """
+        """Get a Spotify user's public profile and public playlists."""
         sp = get_client()
         user = sp.user(user_id)
 

@@ -14,10 +14,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_now_playing() -> str:
-        """Get the currently playing track, playback state, and device info.
-
-        Returns track name, artist, album, progress, and which device is active.
-        """
+        """Get the currently playing track, playback state, and device info."""
         sp = get_client()
         playback = sp.current_playback()
         if not playback or not playback.get("item"):
@@ -49,14 +46,7 @@ def register(mcp):
         device_id: str = None,
         offset: int = None,
     ) -> str:
-        """Start playback of a track, album, or playlist.
-
-        Args:
-            uri: Spotify URI of a specific track (e.g., spotify:track:xxx). Plays this track.
-            context_uri: Spotify URI of an album or playlist to play (e.g., spotify:album:xxx).
-            device_id: Target device ID. If omitted, uses the active device.
-            offset: Position in the context to start from (0-indexed). Only used with context_uri.
-        """
+        """Start or resume playback of a track URI, album/playlist context_uri, or just resume if neither given."""
         sp = get_client()
         kwargs = {}
         if device_id:
@@ -79,11 +69,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_pause(device_id: str = None) -> str:
-        """Pause the current playback.
-
-        Args:
-            device_id: Target device ID. If omitted, uses the active device.
-        """
+        """Pause the current playback."""
         sp = get_client()
         kwargs = {}
         if device_id:
@@ -94,11 +80,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_resume(device_id: str = None) -> str:
-        """Resume paused playback.
-
-        Args:
-            device_id: Target device ID. If omitted, uses the active device.
-        """
+        """Resume paused playback."""
         sp = get_client()
         kwargs = {}
         if device_id:
@@ -109,11 +91,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_skip_next(device_id: str = None) -> str:
-        """Skip to the next track.
-
-        Args:
-            device_id: Target device ID. If omitted, uses the active device.
-        """
+        """Skip to the next track."""
         sp = get_client()
         kwargs = {}
         if device_id:
@@ -124,11 +102,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_skip_previous(device_id: str = None) -> str:
-        """Skip to the previous track.
-
-        Args:
-            device_id: Target device ID. If omitted, uses the active device.
-        """
+        """Skip to the previous track."""
         sp = get_client()
         kwargs = {}
         if device_id:
@@ -139,11 +113,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_add_to_queue(uri: str) -> str:
-        """Add a track or episode to the playback queue.
-
-        Args:
-            uri: Spotify URI of the track or episode (e.g., spotify:track:xxx).
-        """
+        """Add a track or episode URI to the playback queue."""
         sp = get_client()
         sp.add_to_queue(uri)
         return f"Added to queue: {uri}"
@@ -151,10 +121,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_queue() -> str:
-        """Get the current playback queue.
-
-        Returns the currently playing track and upcoming tracks in the queue.
-        """
+        """Get the current playback queue (now playing + upcoming tracks)."""
         sp = get_client()
         queue = sp.queue()
         lines = []
@@ -180,10 +147,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_devices() -> str:
-        """List all available Spotify Connect devices.
-
-        Shows device name, type, active status, and volume level.
-        """
+        """List all available Spotify Connect devices."""
         sp = get_client()
         devices = sp.devices().get("devices", [])
         if not devices:
@@ -197,14 +161,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_set_volume(volume_percent: int, device_id: str = None) -> str:
-        """Set the playback volume.
-
-        Args:
-            volume_percent: Volume level from 0 to 100.
-            device_id: Target device ID. If omitted, uses the active device.
-
-        Requires Spotify Premium.
-        """
+        """Set playback volume (0-100). Requires Premium."""
         if not 0 <= volume_percent <= 100:
             return "**Error:** Volume must be between 0 and 100."
         sp = get_client()
@@ -217,13 +174,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_seek(position_ms: int) -> str:
-        """Seek to a position in the currently playing track.
-
-        Args:
-            position_ms: Position in milliseconds to seek to.
-
-        Requires Spotify Premium.
-        """
+        """Seek to a position (in milliseconds) in the currently playing track. Requires Premium."""
         sp = get_client()
         sp.seek_track(position_ms)
         return f"Seeked to {ms_to_duration(position_ms)}."
@@ -231,14 +182,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_set_repeat(state: str) -> str:
-        """Set the repeat mode for playback.
-
-        Args:
-            state: Repeat mode — "off" (no repeat), "context" (repeat playlist/album),
-                   or "track" (repeat current track).
-
-        Requires Spotify Premium.
-        """
+        """Set repeat mode: off, context, or track. Requires Premium."""
         if state not in ("off", "context", "track"):
             return "**Error:** State must be one of: off, context, track."
         sp = get_client()
@@ -248,13 +192,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_toggle_shuffle(state: bool) -> str:
-        """Turn shuffle on or off.
-
-        Args:
-            state: True to enable shuffle, False to disable.
-
-        Requires Spotify Premium.
-        """
+        """Turn shuffle on or off. Requires Premium."""
         sp = get_client()
         sp.shuffle(state)
         return f"Shuffle {'on' if state else 'off'}."
@@ -262,14 +200,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_transfer_playback(device_id: str, force_play: bool = False) -> str:
-        """Transfer playback to a different device.
-
-        Args:
-            device_id: Target device ID (get IDs from spotify_get_devices).
-            force_play: If True, start playing on new device. If False, keep current state.
-
-        Requires Spotify Premium.
-        """
+        """Transfer playback to a different device. Requires Premium."""
         sp = get_client()
         sp.transfer_playback(device_id, force_play=force_play)
         return f"Playback transferred to device {device_id}."

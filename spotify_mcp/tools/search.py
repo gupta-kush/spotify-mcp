@@ -18,21 +18,7 @@ def register(mcp):
         type: str = "track",
         limit: int = 10,
     ) -> str:
-        """Search Spotify for tracks, artists, albums, or playlists.
-
-        Args:
-            query: Search query. Supports Spotify search syntax:
-                   - Simple: "Bohemian Rhapsody"
-                   - By artist: "artist:Radiohead"
-                   - By genre: "genre:indie rock"
-                   - By year: "year:2024"
-                   - Combined: "genre:jazz year:2020-2025"
-            type: What to search for. One of: "track", "artist", "album", "playlist".
-                  Can also be comma-separated for multiple types: "track,artist".
-            limit: Number of results to return (1-50). Default 10.
-
-        Returns formatted search results.
-        """
+        """Search Spotify for tracks, artists, albums, or playlists. Supports field filters like artist:, genre:, year: in the query."""
         limit = max(1, min(50, limit))
         sp = get_client()
 

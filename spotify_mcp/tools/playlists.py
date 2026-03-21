@@ -18,13 +18,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_my_playlists(limit: int = 50) -> str:
-        """List your Spotify playlists.
-
-        Args:
-            limit: Max number of playlists to return (1-50). Default 50.
-
-        Returns playlist names, track counts, and IDs.
-        """
+        """List your playlists (up to 50)."""
         limit = max(1, min(50, limit))
         sp = get_client()
         results = sp.current_user_playlists(limit=limit)
@@ -37,13 +31,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_playlist(playlist_id: str) -> str:
-        """Get details about a specific playlist including its tracks.
-
-        Args:
-            playlist_id: Spotify playlist ID or URI.
-
-        Returns playlist metadata and the first batch of tracks.
-        """
+        """Get playlist details and its first page of tracks."""
         sp = get_client()
         playlist = sp.playlist(playlist_id)
 
@@ -74,15 +62,7 @@ def register(mcp):
         limit: int = 100,
         offset: int = 0,
     ) -> str:
-        """Get tracks from a playlist with pagination support.
-
-        Args:
-            playlist_id: Spotify playlist ID or URI.
-            limit: Number of tracks to return (1-100). Default 100.
-            offset: Starting position (0-indexed). Default 0.
-
-        Use offset to page through large playlists.
-        """
+        """Get tracks from a playlist with pagination (limit up to 100, offset for paging)."""
         limit = max(1, min(100, limit))
         sp = get_client()
         results = sp.playlist_items(playlist_id, limit=limit, offset=offset)
@@ -99,15 +79,7 @@ def register(mcp):
         description: str = "",
         public: bool = False,
     ) -> str:
-        """Create a new empty playlist.
-
-        Args:
-            name: Name for the new playlist.
-            description: Optional description.
-            public: Whether the playlist should be public. Default False (private).
-
-        Returns the new playlist's ID and URL.
-        """
+        """Create a new empty playlist with the given name."""
         sp = get_client()
         user_id = sp.me()["id"]
         playlist = sp.user_playlist_create(
@@ -127,15 +99,7 @@ def register(mcp):
         uris: list[str],
         position: int = None,
     ) -> str:
-        """Add tracks to a playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID.
-            uris: List of Spotify track URIs (e.g., ["spotify:track:xxx", "spotify:track:yyy"]).
-            position: Position to insert tracks (0-indexed). If omitted, appends to end.
-
-        Tracks are added in the order provided. Max 100 per call.
-        """
+        """Add track URIs to a playlist (max 100 per call). Appends by default or inserts at position."""
         if not uris:
             return "**Error:** No track URIs provided."
         if len(uris) > 100:
@@ -154,14 +118,7 @@ def register(mcp):
         playlist_id: str,
         uris: list[str],
     ) -> str:
-        """Remove tracks from a playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID.
-            uris: List of Spotify track URIs to remove.
-
-        Removes ALL occurrences of each track from the playlist.
-        """
+        """Remove all occurrences of the given track URIs from a playlist."""
         if not uris:
             return "**Error:** No track URIs provided."
 
@@ -178,17 +135,7 @@ def register(mcp):
         insert_before: int,
         range_length: int = 1,
     ) -> str:
-        """Move tracks within a playlist to a new position.
-
-        Args:
-            playlist_id: Spotify playlist ID.
-            range_start: Position of the first track to move (0-indexed).
-            insert_before: Position to insert the tracks before (0-indexed).
-            range_length: Number of consecutive tracks to move. Default 1.
-
-        Example: To move track at position 5 to position 0 (top):
-        range_start=5, insert_before=0
-        """
+        """Move tracks within a playlist (range_start to insert_before, range_length consecutive)."""
         sp = get_client()
         sp.playlist_reorder_items(
             playlist_id,
@@ -209,14 +156,7 @@ def register(mcp):
         description: str = None,
         public: bool = None,
     ) -> str:
-        """Update a playlist's name, description, or visibility.
-
-        Args:
-            playlist_id: Spotify playlist ID.
-            name: New name (optional).
-            description: New description (optional).
-            public: Set to True for public, False for private (optional).
-        """
+        """Update a playlist's name, description, or public/private visibility."""
         kwargs = {}
         if name is not None:
             kwargs["name"] = name
@@ -244,11 +184,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_follow_playlist(playlist_id: str) -> str:
-        """Follow a playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID or URI.
-        """
+        """Follow a playlist."""
         sp = get_client()
         sp.current_user_follow_playlist(playlist_id)
         return f"Now following playlist `{playlist_id}`."
@@ -256,11 +192,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_unfollow_playlist(playlist_id: str) -> str:
-        """Unfollow a playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID or URI.
-        """
+        """Unfollow a playlist."""
         sp = get_client()
         sp.current_user_unfollow_playlist(playlist_id)
         return f"Unfollowed playlist `{playlist_id}`."
@@ -268,11 +200,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_get_playlist_cover(playlist_id: str) -> str:
-        """Get a playlist's cover image URL.
-
-        Args:
-            playlist_id: Spotify playlist ID or URI.
-        """
+        """Get a playlist's cover image URLs."""
         sp = get_client()
         playlist_id = parse_spotify_id(playlist_id)
         images = sp.playlist_cover_image(playlist_id)
@@ -289,12 +217,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_check_playlist_followers(playlist_id: str, user_ids: list[str]) -> str:
-        """Check if specific users follow a playlist.
-
-        Args:
-            playlist_id: Spotify playlist ID or URI.
-            user_ids: List of Spotify user IDs to check (max 5).
-        """
+        """Check if specific users follow a playlist (max 5 user IDs)."""
         if not user_ids:
             return "**Error:** No user IDs provided."
         if len(user_ids) > 5:

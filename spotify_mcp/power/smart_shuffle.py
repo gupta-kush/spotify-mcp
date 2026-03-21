@@ -26,22 +26,7 @@ def register(mcp):
         playlist_id: str,
         strategy: str = "variety",
     ) -> str:
-        """Reorder a playlist using a smart shuffle strategy.
-
-        Unlike random shuffle, this reorders tracks intelligently.
-
-        Args:
-            playlist_id: Spotify playlist ID to reorder.
-            strategy: Reordering strategy.
-                      "variety" (default) — spreads same-artist tracks apart for maximum variety.
-                      "alphabetical_artist" — sorts by artist name.
-                      "chronological" — sorts by album release date, oldest first.
-                      "genre_variety" — interleaves tracks by genre for maximum genre variety.
-                      "energy_arc" — arranges tracks in a low-high-low energy arc.
-                      "reverse_chronological" — sorts by album release date, newest first.
-
-        This replaces ALL tracks in the playlist with the reordered version.
-        """
+        """Reorder a playlist using a smart strategy: variety, alphabetical_artist, chronological, genre_variety, energy_arc, or reverse_chronological."""
         if strategy not in STRATEGIES:
             available = "\n".join(f"- **{k}**: {v}" for k, v in STRATEGIES.items())
             return f"**Error:** Unknown strategy '{strategy}'. Available:\n{available}"

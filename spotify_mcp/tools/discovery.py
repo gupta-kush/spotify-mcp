@@ -20,14 +20,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_related_artists(artist_id: str) -> str:
-        """Get artists similar to a given artist.
-
-        Args:
-            artist_id: Spotify artist ID (e.g., "4Z8W4fKeB5YxbusRsdQVPb").
-                       You can get this from spotify_search results.
-
-        Returns up to 20 related artists with their genres.
-        """
+        """Get up to 20 artists similar to a given artist."""
         sp = get_client()
         result = sp.artist_related_artists(artist_id)
         related = result.get("artists", [])
@@ -45,15 +38,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_discover_by_artist(artist_id: str, limit: int = 20) -> str:
-        """Discover new tracks through an artist's related artists.
-
-        Finds related artists, then collects tracks from their recent albums.
-        Great for expanding your music taste starting from an artist you like.
-
-        Args:
-            artist_id: Spotify artist ID to start from.
-            limit: Number of tracks to return (1-50). Default 20.
-        """
+        """Discover tracks from an artist's related artists' recent albums (1-50)."""
         limit = max(1, min(50, limit))
         sp = get_client()
 
@@ -102,16 +87,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_discover_by_mood(mood: str, limit: int = 20) -> str:
-        """Discover tracks matching a mood or vibe.
-
-        Uses genre-based search since Spotify's recommendations API was deprecated.
-        Results are based on genre associations rather than audio feature analysis.
-
-        Args:
-            mood: Mood keyword. Supported: happy, sad, energetic, chill,
-                  focused, romantic, angry, party.
-            limit: Number of tracks to return (1-50). Default 20.
-        """
+        """Discover tracks by mood (happy, sad, energetic, chill, focused, romantic, angry, party)."""
         mood_lower = mood.lower().strip()
         if mood_lower not in MOOD_GENRE_MAP:
             available = ", ".join(sorted(MOOD_GENRE_MAP.keys()))
@@ -155,12 +131,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_genre_explorer(genre: str, limit: int = 20) -> str:
-        """Explore a genre — find tracks and artists.
-
-        Args:
-            genre: Genre to explore (e.g., 'jazz', 'indie', 'metal').
-            limit: Number of results per section (1-30). Default 20.
-        """
+        """Explore a genre by finding its tracks and artists."""
         limit = max(1, min(30, limit))
         sp = get_client()
 
@@ -181,12 +152,7 @@ def register(mcp):
     @mcp.tool()
     @catch_spotify_errors
     def spotify_discover_deep_cuts(artist_id: str, limit: int = 10) -> str:
-        """Find deep cuts — album tracks that weren't released as singles.
-
-        Args:
-            artist_id: Spotify artist ID.
-            limit: Number of deep cuts to return (1-30). Default 10.
-        """
+        """Find an artist's deep cuts -- album tracks that were not released as singles."""
         limit = max(1, min(30, limit))
         sp = get_client()
 
