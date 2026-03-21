@@ -20,10 +20,9 @@ def setup():
         print("Error: Client ID is required.")
         sys.exit(1)
 
-    client_secret = getpass.getpass("Spotify Client Secret: ").strip()
-    if not client_secret:
-        print("Error: Client Secret is required.")
-        sys.exit(1)
+    client_secret = getpass.getpass(
+        "Spotify Client Secret (press Enter to skip — uses PKCE instead): "
+    ).strip()
 
     redirect_uri = input(
         "Redirect URI [http://127.0.0.1:8888/callback]: "
@@ -38,11 +37,15 @@ def setup():
     config_dir.mkdir(parents=True, exist_ok=True)
     env_path = config_dir / ".env"
 
-    env_content = (
-        f"SPOTIFY_CLIENT_ID={client_id}\n"
-        f"SPOTIFY_CLIENT_SECRET={client_secret}\n"
-        f"SPOTIFY_REDIRECT_URI={redirect_uri}\n"
-    )
+    env_lines = [
+        f"SPOTIFY_CLIENT_ID={client_id}",
+        f"SPOTIFY_REDIRECT_URI={redirect_uri}",
+    ]
+    if client_secret:
+        env_lines.insert(1, f"SPOTIFY_CLIENT_SECRET={client_secret}")
+    else:
+        print("\nNo client secret — will use PKCE auth (recommended).")
+    env_content = "\n".join(env_lines) + "\n"
 
     env_path.write_text(env_content)
     print(f"\nCredentials saved to {env_path}")
@@ -54,7 +57,8 @@ def setup():
 
     # Set env vars so config.py picks them up
     os.environ["SPOTIFY_CLIENT_ID"] = client_id
-    os.environ["SPOTIFY_CLIENT_SECRET"] = client_secret
+    if client_secret:
+        os.environ["SPOTIFY_CLIENT_SECRET"] = client_secret
     os.environ["SPOTIFY_REDIRECT_URI"] = redirect_uri
 
     try:
