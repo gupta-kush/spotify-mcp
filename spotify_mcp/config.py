@@ -147,8 +147,23 @@ TOOLSET_MODULES = {
         "playlist_ops", "reports", "smart_shuffle", "deep_dive",
         "playlist_generator", "playlist_sort", "playlist_curator",
         "queue_builder", "vibe_engine", "insights", "artist_explorer",
-        "find_song",
+        "find_song", "library_index",
     ],
+    # "destructive" is a flag toolset — it doesn't add modules, it prevents
+    # stripping of destructive tools. Include via --toolsets=all,destructive
+    "destructive": [],
+}
+
+# Destructive tools that require explicit opt-in.
+# These are excluded from "all" and only load with --toolsets=destructive
+DESTRUCTIVE_TOOLS = {
+    "spotify_remove_from_playlist",
+    "spotify_unfollow_playlist",
+    "spotify_remove_saved_tracks",
+    "spotify_remove_saved_albums",
+    "spotify_remove_saved_shows",
+    "spotify_unfollow_artists",
+    "spotify_unfollow_users",
 }
 
 # Default toolsets when none specified (all tools for backward compat)

@@ -27,12 +27,23 @@ def register(mcp):
 
     @mcp.tool()
     @catch_spotify_errors
-    def spotify_unfollow_artists(artist_ids: list[str]) -> str:
-        """Unfollow one or more artists (max 50 per call)."""
+    def spotify_unfollow_artists(artist_ids: list[str], dry_run: bool = True) -> str:
+        """Unfollow one or more artists (max 50 per call).
+
+        DESTRUCTIVE: Unfollows artists. Defaults to dry_run=True which only
+        previews. Set dry_run=False to execute.
+        """
         if not artist_ids:
             return "**Error:** No artist IDs provided."
         if len(artist_ids) > 50:
             return "**Error:** Max 50 artists per call."
+
+        if dry_run:
+            return (
+                f"**Dry run** — would unfollow {len(artist_ids)} artist(s).\n\n"
+                f"Set `dry_run=False` to execute."
+            )
+
         sp = get_client()
         ids = [parse_spotify_id(a) for a in artist_ids]
         sp.user_unfollow_artists(ids)
@@ -93,10 +104,21 @@ def register(mcp):
 
     @mcp.tool()
     @catch_spotify_errors
-    def spotify_unfollow_users(user_ids: list[str]) -> str:
-        """Unfollow one or more Spotify users."""
+    def spotify_unfollow_users(user_ids: list[str], dry_run: bool = True) -> str:
+        """Unfollow one or more Spotify users.
+
+        DESTRUCTIVE: Unfollows users. Defaults to dry_run=True which only
+        previews. Set dry_run=False to execute.
+        """
         if not user_ids:
             return "**Error:** No user IDs provided."
+
+        if dry_run:
+            return (
+                f"**Dry run** — would unfollow {len(user_ids)} user(s).\n\n"
+                f"Set `dry_run=False` to execute."
+            )
+
         sp = get_client()
         sp.user_unfollow_users(user_ids)
         return f"Unfollowed {len(user_ids)} user(s)."

@@ -43,12 +43,24 @@ def register(mcp):
 
     @mcp.tool()
     @catch_spotify_errors
-    def spotify_remove_saved_tracks(uris: list[str]) -> str:
-        """Remove tracks from your Liked Songs (max 50 URIs per call)."""
+    def spotify_remove_saved_tracks(uris: list[str], dry_run: bool = True) -> str:
+        """Remove tracks from your Liked Songs (max 50 URIs per call).
+
+        DESTRUCTIVE: Removes tracks from Liked Songs. Defaults to dry_run=True
+        which only previews what would be removed. Set dry_run=False to execute.
+        """
         if not uris:
             return "**Error:** No track URIs provided."
         if len(uris) > 50:
             return "**Error:** Max 50 tracks per call."
+
+        if dry_run:
+            return (
+                f"**Dry run** — would remove {len(uris)} track(s) from Liked Songs.\n\n"
+                f"URIs: {', '.join(uris[:10])}"
+                f"{'...' if len(uris) > 10 else ''}\n\n"
+                f"Set `dry_run=False` to execute."
+            )
 
         sp = get_client()
         track_ids = [parse_spotify_id(u) for u in uris]
@@ -88,12 +100,23 @@ def register(mcp):
 
     @mcp.tool()
     @catch_spotify_errors
-    def spotify_remove_saved_albums(album_ids: list[str]) -> str:
-        """Remove albums from your library (max 50 per call)."""
+    def spotify_remove_saved_albums(album_ids: list[str], dry_run: bool = True) -> str:
+        """Remove albums from your library (max 50 per call).
+
+        DESTRUCTIVE: Removes albums from your library. Defaults to dry_run=True
+        which only previews what would be removed. Set dry_run=False to execute.
+        """
         if not album_ids:
             return "**Error:** No album IDs provided."
         if len(album_ids) > 50:
             return "**Error:** Max 50 albums per call."
+
+        if dry_run:
+            return (
+                f"**Dry run** — would remove {len(album_ids)} album(s) from your library.\n\n"
+                f"Set `dry_run=False` to execute."
+            )
+
         sp = get_client()
         ids = [parse_spotify_id(a) for a in album_ids]
         sp.current_user_saved_albums_delete(ids)

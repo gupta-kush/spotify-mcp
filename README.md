@@ -3,11 +3,11 @@
 
 [![PyPI](https://img.shields.io/pypi/v/spotify-mcp)](https://pypi.org/project/spotify-mcp/)
 [![Tests](https://github.com/gupta-kush/spotify-mcp/actions/workflows/test.yml/badge.svg)](https://github.com/gupta-kush/spotify-mcp/actions/workflows/test.yml)
-![93 Tools](https://img.shields.io/badge/tools-93-brightgreen)
+![96 Tools](https://img.shields.io/badge/tools-96-brightgreen)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-Control Spotify from Claude, Cursor, or any MCP client. **93 tools** -- not just play/pause, but smart shuffling, vibe analysis, natural language song search, artist network mapping, taste evolution tracking, and way more. Built for Spotify's [post-February 2026 API](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security) where most other servers broke.
+Control Spotify from Claude, Cursor, or any MCP client. **96 tools** -- not just play/pause, but smart shuffling, vibe analysis, natural language song search, artist network mapping, taste evolution tracking, and way more. Built for Spotify's [post-February 2026 API](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security) where most other servers broke.
 
 <!-- TODO: Replace with actual demo GIF -->
 
@@ -17,12 +17,14 @@ There are 30+ Spotify MCP servers out there. Most give you 10-15 tools covering 
 
 | | spotify-mcp | Typical server |
 |---|---|---|
-| **Tools** | **93** | 5-15 |
+| **Tools** | **96** | 5-15 |
 | **Smart shuffle** (6 strategies including energy arcs) | Yes | No |
 | **Vibe engine** -- mood analysis without audio-features API | Yes | No |
 | **"Find that sad piano song from the 2000s"** | Yes | No |
 | **Map an artist's network** of 100 related artists | Yes | No |
 | **"How has my taste changed?"** -- evolution tracking | Yes | No |
+| **Library index** -- AI playlists from songs you already know | Yes | No |
+| **Destructive tools stripped by default** -- safe for auto-accept | Yes | No |
 | **Merge / diff / deduplicate** playlists | Yes | No |
 | **Works after Spotify's Feb 2026 API changes** | Yes | Most broke |
 | **PKCE auth** -- no client secret needed | Yes | Rare |
@@ -105,18 +107,27 @@ Just talk to your AI assistant like you'd talk to a friend who has access to you
 
 ## Toolsets
 
-By default, all 93 tools are loaded. For clients with tool limits (Cursor: 40 max), use `--toolsets` to load only what you need:
+By default, all 96 tools are loaded (minus destructive tools -- see [Safety](#safety) below). For clients with tool limits (Cursor: 40 max), use `--toolsets` to load only what you need:
 
 ```bash
 spotify-mcp --toolsets=core              # ~27 tools: playback, playlists, search, library, browse, stats
 spotify-mcp --toolsets=core,discovery    # Add music discovery
 spotify-mcp --toolsets=core,power        # Add power tools (smart shuffle, vibe engine, etc.)
-spotify-mcp --toolsets=all               # All 93 tools (default)
+spotify-mcp --toolsets=all               # All tools (default, destructive excluded)
+spotify-mcp --toolsets=all,destructive   # All tools including remove/unfollow
 ```
 
 Or via environment variable: `SPOTIFY_MCP_TOOLSETS=core,power`
 
-Available toolsets: `core`, `social`, `discovery`, `power`, `all`
+Available toolsets: `core`, `social`, `discovery`, `power`, `destructive`, `all`
+
+## Safety
+
+**Destructive tools are stripped by default.** Tools that remove tracks, unfollow artists, or delete content are not loaded unless you explicitly opt in with `--toolsets=all,destructive`. This makes the server safe for auto-accept mode -- the AI literally cannot call tools that don't exist.
+
+Affected tools: `spotify_remove_from_playlist`, `spotify_remove_saved_tracks`, `spotify_remove_saved_albums`, `spotify_remove_saved_shows`, `spotify_unfollow_playlist`, `spotify_unfollow_artists`, `spotify_unfollow_users`
+
+Even when destructive tools are enabled, they default to `dry_run=True` -- showing a preview of what would happen without actually executing. The AI must explicitly pass `dry_run=False` to perform the action.
 
 ## Tool Reference
 
@@ -346,6 +357,27 @@ Available toolsets: `core`, `social`, `discovery`, `power`, `all`
 | Tool | Description |
 |------|-------------|
 | `spotify_find_song` | Find a song using natural language description |
+
+</details>
+
+<details>
+<summary><strong>Library Index (3 tools)</strong></summary>
+
+Sync your full Spotify library to a local index, then let your AI assistant create personalized playlists from songs you actually know and love -- not random catalog tracks.
+
+| Tool | Description |
+|------|-------------|
+| `spotify_sync_library` | Sync liked songs and your playlists to a local JSON index |
+| `spotify_library_stats` | Artist counts, playlist names, and dates -- compact overview for AI reasoning |
+| `spotify_query_library` | Filter your library by artist, playlist, date range, track/album name |
+
+**Example workflow:**
+
+> "Make a playlist with my favorite indie rock songs from this year"
+>
+> AI calls `spotify_library_stats` to see your artist landscape, picks matching artists using its music knowledge, calls `spotify_query_library` with those artists + `added_after="2026-01-01"`, then creates a playlist with songs you already know.
+
+The sync stores data locally at `%LOCALAPPDATA%\spotify-mcp\library.json` (Windows) or `~/.cache/spotify-mcp/library.json` (Linux/Mac). Only syncs playlists you created -- skips followed/saved playlists by others.
 
 </details>
 

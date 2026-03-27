@@ -117,13 +117,26 @@ def register(mcp):
     def spotify_remove_from_playlist(
         playlist_id: str,
         uris: list[str],
+        dry_run: bool = True,
     ) -> str:
-        """Remove all occurrences of the given track URIs from a playlist."""
+        """Remove all occurrences of the given track URIs from a playlist.
+
+        DESTRUCTIVE: Permanently removes tracks. Defaults to dry_run=True
+        which only previews what would be removed. Set dry_run=False to execute.
+        """
         if not uris:
             return "**Error:** No track URIs provided."
 
+        if dry_run:
+            return (
+                f"**Dry run** — would remove {len(uris)} track(s) from "
+                f"playlist `{playlist_id}`.\n\n"
+                f"URIs: {', '.join(uris[:10])}"
+                f"{'...' if len(uris) > 10 else ''}\n\n"
+                f"Set `dry_run=False` to execute."
+            )
+
         sp = get_client()
-        # playlist_remove_all_occurrences_of_items expects list of URIs
         sp.playlist_remove_all_occurrences_of_items(playlist_id, uris)
         return f"Removed {len(uris)} track(s) from playlist `{playlist_id}`."
 
@@ -191,8 +204,17 @@ def register(mcp):
 
     @mcp.tool()
     @catch_spotify_errors
-    def spotify_unfollow_playlist(playlist_id: str) -> str:
-        """Unfollow a playlist."""
+    def spotify_unfollow_playlist(playlist_id: str, dry_run: bool = True) -> str:
+        """Unfollow (remove) a playlist from your library.
+
+        DESTRUCTIVE: Removes the playlist from your library. Defaults to
+        dry_run=True which only previews. Set dry_run=False to execute.
+        """
+        if dry_run:
+            return (
+                f"**Dry run** — would unfollow playlist `{playlist_id}`.\n\n"
+                f"Set `dry_run=False` to execute."
+            )
         sp = get_client()
         sp.current_user_unfollow_playlist(playlist_id)
         return f"Unfollowed playlist `{playlist_id}`."

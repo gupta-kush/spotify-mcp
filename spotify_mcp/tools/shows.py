@@ -96,12 +96,23 @@ def register(mcp):
 
     @mcp.tool()
     @catch_spotify_errors
-    def spotify_remove_saved_shows(show_ids: list[str]) -> str:
-        """Remove shows from your library (max 50 per call)."""
+    def spotify_remove_saved_shows(show_ids: list[str], dry_run: bool = True) -> str:
+        """Remove shows from your library (max 50 per call).
+
+        DESTRUCTIVE: Removes shows from your library. Defaults to dry_run=True
+        which only previews. Set dry_run=False to execute.
+        """
         if not show_ids:
             return "**Error:** No show IDs provided."
         if len(show_ids) > 50:
             return "**Error:** Max 50 shows per call."
+
+        if dry_run:
+            return (
+                f"**Dry run** — would remove {len(show_ids)} show(s) from your library.\n\n"
+                f"Set `dry_run=False` to execute."
+            )
+
         sp = get_client()
         ids = [parse_spotify_id(s) for s in show_ids]
         sp.current_user_saved_shows_delete(ids)

@@ -86,6 +86,7 @@ _MODULE_REGISTRY = {
     "insights": ("power", "insights"),
     "artist_explorer": ("power", "artist_explorer"),
     "find_song": ("power", "find_song"),
+    "library_index": ("power", "library_index"),
 }
 
 
@@ -145,6 +146,16 @@ def _register_modules(module_names: list[str]):
 
 _toolsets = _parse_toolsets()
 _register_modules(_resolve_toolsets(_toolsets))
+
+# Strip destructive tools unless explicitly opted in with --toolsets=destructive
+if "destructive" not in _toolsets:
+    from .config import DESTRUCTIVE_TOOLS
+    for tool_name in DESTRUCTIVE_TOOLS:
+        if tool_name in mcp._tool_manager._tools:
+            mcp._tool_manager._tools.pop(tool_name)
+            logger.info(f"Stripped destructive tool: {tool_name} (opt in with --toolsets=destructive)")
+else:
+    logger.info("Destructive tools enabled (--toolsets includes 'destructive')")
 
 from .config import SPOTIFY_CLIENT_ID
 if not SPOTIFY_CLIENT_ID:
