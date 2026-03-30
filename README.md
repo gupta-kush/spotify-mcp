@@ -461,4 +461,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code conventions, 
 
 ---
 
-If this is useful to you, a star on the repo goes a long way. It helps other people find it.
+If this tool was useful to you, please leave a star on the repo and any feedback you might have. Thank you!
