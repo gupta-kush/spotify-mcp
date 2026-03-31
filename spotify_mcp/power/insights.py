@@ -1,4 +1,4 @@
-"""Listening insights tools — patterns, taste profile, and playlist comparison."""
+"""Listening insights tools — patterns, taste profile, playlist comparison, and freshness."""
 
 import logging
 import time
@@ -400,5 +400,113 @@ def register(mcp):
             else:
                 lines.append("_No unique tracks — all tracks also appear in other playlists._")
             lines.append("")
+
+        return "\n".join(lines)
+
+    @mcp.tool()
+    def spotify_playlist_freshness(owner_only: bool = True, limit: int = 50) -> str:
+        """Scan all your playlists and show when each was last updated, sorted by staleness (oldest first)."""
+        sp = get_client()
+        me = sp.me()
+        my_id = me.get("id", "")
+
+        # Fetch all user playlists
+        playlists = []
+        offset = 0
+        while True:
+            page = sp.current_user_playlists(limit=50, offset=offset)
+            page_items = page.get("items", [])
+            playlists.extend(page_items)
+            if page.get("next") is None or not page_items:
+                break
+            offset += 50
+
+        if owner_only:
+            playlists = [
+                p for p in playlists
+                if p.get("owner", {}).get("id") == my_id
+            ]
+
+        if not playlists:
+            return "No playlists found."
+
+        limit = max(1, min(200, limit))
+        now = datetime.utcnow()
+
+        # For each playlist, find the most recent added_at
+        freshness = []
+        for p in playlists:
+            pid = p["id"]
+            pname = p.get("name", pid)
+            track_count = p.get("tracks", {}).get("total", 0)
+
+            items = fetch_all_playlist_items(sp, pid)
+            latest_dt = None
+            for item in items:
+                added_at_str = item.get("added_at", "")
+                if not added_at_str:
+                    continue
+                try:
+                    dt = datetime.fromisoformat(added_at_str.replace("Z", "+00:00")).replace(tzinfo=None)
+                    if latest_dt is None or dt > latest_dt:
+                        latest_dt = dt
+                except (ValueError, AttributeError):
+                    continue
+
+            if latest_dt:
+                days_ago = (now - latest_dt).days
+            else:
+                days_ago = -1  # unknown
+
+            freshness.append({
+                "name": pname,
+                "id": pid,
+                "track_count": track_count,
+                "last_added": latest_dt,
+                "days_ago": days_ago,
+            })
+
+        # Sort: unknown dates last, then by days_ago descending (stalest first)
+        freshness.sort(key=lambda x: (-1 if x["days_ago"] < 0 else x["days_ago"]), reverse=True)
+
+        lines = [
+            "# Playlist Freshness Report",
+            "",
+            f"Scanned {len(freshness)} playlists"
+            + (" (owned by you)" if owner_only else ""),
+            "",
+        ]
+
+        for i, f in enumerate(freshness[:limit], 1):
+            if f["last_added"]:
+                date_str = f["last_added"].strftime("%Y-%m-%d")
+                if f["days_ago"] == 0:
+                    ago = "today"
+                elif f["days_ago"] == 1:
+                    ago = "1 day ago"
+                else:
+                    ago = f"{f['days_ago']} days ago"
+                lines.append(
+                    f"{i}. **{f['name']}** — {f['track_count']} tracks — "
+                    f"last added {date_str} ({ago})"
+                )
+            else:
+                lines.append(
+                    f"{i}. **{f['name']}** — {f['track_count']} tracks — "
+                    f"last added: _unknown_"
+                )
+
+        if len(freshness) > limit:
+            lines.append(f"\n_...and {len(freshness) - limit} more playlists_")
+
+        # Highlight stale playlists (>180 days)
+        stale = [f for f in freshness if f["days_ago"] > 180]
+        if stale:
+            lines.append("")
+            lines.append(f"**{len(stale)} stale playlists** (not updated in 6+ months):")
+            for f in stale[:10]:
+                lines.append(f"- **{f['name']}** — {f['days_ago']} days ago")
+            if len(stale) > 10:
+                lines.append(f"_...and {len(stale) - 10} more_")
 
         return "\n".join(lines)

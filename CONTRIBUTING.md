@@ -30,8 +30,8 @@ Thanks for your interest in contributing!
 ## Adding a New Tool
 
 1. **Choose the right module:**
-   - `spotify_mcp/tools/` — Standard Spotify API wrappers (playback, playlists, search, etc.)
-   - `spotify_mcp/power/` — Compound operations that combine multiple API calls (smart shuffle, vibe analysis, etc.)
+   - `spotify_mcp/tools/` -- Standard Spotify API wrappers (playback, playlists, search, etc.)
+   - `spotify_mcp/power/` -- Compound operations that combine multiple API calls (smart shuffle, vibe analysis, etc.)
 
 2. **Add your tool** inside the module's `register(mcp)` function using the `@mcp.tool()` decorator.
 
@@ -49,6 +49,6 @@ Thanks for your interest in contributing!
 ## Code Style
 
 - Use type hints for function signatures
-- Add clear docstrings — these are shown to LLMs, so be descriptive about parameters and behavior
+- Add clear docstrings -- these are shown to LLMs, so be descriptive about parameters and behavior
 - Use `logging.getLogger(__name__)` for logging
 - Use relative imports (`from ..utils.X import ...`)

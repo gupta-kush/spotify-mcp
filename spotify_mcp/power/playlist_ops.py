@@ -1,4 +1,4 @@
-"""Power tools for playlist operations — 6 tools."""
+"""Power tools for playlist operations — 8 tools."""
 
 import logging
 from itertools import combinations
@@ -393,5 +393,191 @@ def register(mcp):
                     f"- **{o['name_a']}** + **{o['name_b']}** "
                     f"({o['shared']} shared, {o['pct']:.0f}%)"
                 )
+
+        return "\n".join(lines)
+
+    @mcp.tool()
+    def spotify_find_playlist_subsets(threshold: int = 80, owner_only: bool = True) -> str:
+        """Scan all your playlists and find ones where one playlist is a near-subset of another. Threshold is the percentage of the smaller playlist's tracks that must exist in the larger."""
+        sp = get_client()
+        me = sp.me()
+        my_id = me.get("id", "")
+
+        # Fetch all user playlists
+        playlists = []
+        offset = 0
+        while True:
+            page = sp.current_user_playlists(limit=50, offset=offset)
+            page_items = page.get("items", [])
+            playlists.extend(page_items)
+            if page.get("next") is None or not page_items:
+                break
+            offset += 50
+
+        if owner_only:
+            playlists = [
+                p for p in playlists
+                if p.get("owner", {}).get("id") == my_id
+            ]
+
+        if len(playlists) < 2:
+            return "Need at least 2 playlists to compare."
+
+        # Fetch track URIs for each playlist
+        playlist_tracks = {}
+        playlist_names = {}
+        for p in playlists:
+            pid = p["id"]
+            pname = p.get("name", pid)
+            playlist_names[pid] = pname
+            items = fetch_all_playlist_items(sp, pid)
+            uris = set()
+            for item in items:
+                track = item.get("track")
+                if track and track.get("uri"):
+                    uris.add(track["uri"])
+            playlist_tracks[pid] = uris
+
+        # Check every directed pair: is A a subset of B?
+        threshold = max(1, min(100, threshold))
+        subsets = []
+        for (id_a, id_b) in combinations(playlist_tracks.keys(), 2):
+            size_a = len(playlist_tracks[id_a])
+            size_b = len(playlist_tracks[id_b])
+            if size_a == 0 and size_b == 0:
+                continue
+
+            # Check both directions: A ⊆ B and B ⊆ A
+            for small_id, large_id in [(id_a, id_b), (id_b, id_a)]:
+                small_size = len(playlist_tracks[small_id])
+                large_size = len(playlist_tracks[large_id])
+                if small_size == 0 or small_size >= large_size:
+                    continue
+                shared = playlist_tracks[small_id] & playlist_tracks[large_id]
+                pct = (len(shared) / small_size * 100) if small_size > 0 else 0
+                if pct >= threshold:
+                    subsets.append({
+                        "small_name": playlist_names[small_id],
+                        "large_name": playlist_names[large_id],
+                        "small_id": small_id,
+                        "large_id": large_id,
+                        "small_size": small_size,
+                        "large_size": large_size,
+                        "shared": len(shared),
+                        "pct": pct,
+                    })
+
+        # Sort by subset percentage descending
+        subsets.sort(key=lambda x: x["pct"], reverse=True)
+
+        lines = [
+            f"**Playlist Subset Scan**",
+            f"Scanned {len(playlists)} playlists"
+            + (" (owned by you)" if owner_only else ""),
+            f"Threshold: {threshold}%",
+            "",
+        ]
+
+        if not subsets:
+            lines.append("No subset relationships found at this threshold.")
+            return "\n".join(lines)
+
+        lines.append(f"**{len(subsets)} subset relationship(s) found:**\n")
+
+        for i, s in enumerate(subsets[:50], 1):
+            lines.append(
+                f"{i}. **{s['small_name']}** ({s['small_size']} tracks) is "
+                f"**{s['pct']:.0f}%** contained within "
+                f"**{s['large_name']}** ({s['large_size']} tracks) "
+                f"— {s['shared']} shared"
+            )
+        if len(subsets) > 50:
+            lines.append(f"\n_...and {len(subsets) - 50} more_")
+
+        # Consolidation suggestions
+        perfect = [s for s in subsets if s["pct"] == 100]
+        near = [s for s in subsets if 90 <= s["pct"] < 100]
+        if perfect or near:
+            lines.append("")
+            lines.append("**Consolidation suggestions:**")
+            for s in perfect:
+                lines.append(
+                    f"- **{s['small_name']}** is fully contained in "
+                    f"**{s['large_name']}** — consider removing the smaller playlist"
+                )
+            for s in near:
+                lines.append(
+                    f"- **{s['small_name']}** is {s['pct']:.0f}% inside "
+                    f"**{s['large_name']}** — consider absorbing the remaining "
+                    f"{s['small_size'] - s['shared']} track(s)"
+                )
+
+        return "\n".join(lines)
+
+    @mcp.tool()
+    def spotify_absorb_playlist(source_playlist_id: str, target_playlist_id: str, dry_run: bool = True) -> str:
+        """Merge unique tracks from a source playlist into a target playlist. Tracks already in target are skipped. Set dry_run=False to apply."""
+        sp = get_client()
+
+        source_meta = sp.playlist(source_playlist_id, fields="name")
+        target_meta = sp.playlist(target_playlist_id, fields="name")
+        source_name = source_meta.get("name", source_playlist_id)
+        target_name = target_meta.get("name", target_playlist_id)
+
+        source_items = fetch_all_playlist_items(sp, source_playlist_id)
+        target_items = fetch_all_playlist_items(sp, target_playlist_id)
+
+        # Build target URI set
+        target_uris = set()
+        for item in target_items:
+            track = item.get("track")
+            if track and track.get("uri"):
+                target_uris.add(track["uri"])
+
+        # Find tracks in source but not in target
+        unique_tracks = []
+        seen = set()
+        for item in source_items:
+            track = item.get("track")
+            if not track or not track.get("uri"):
+                continue
+            uri = track["uri"]
+            if uri not in target_uris and uri not in seen:
+                seen.add(uri)
+                unique_tracks.append(track)
+
+        lines = [
+            f"**Absorb Playlist**",
+            f"Source: **{source_name}** ({len(source_items)} tracks)",
+            f"Target: **{target_name}** ({len(target_items)} tracks)",
+            "",
+            f"Already in target: {len(source_items) - len(unique_tracks)}",
+            f"Unique tracks to add: {len(unique_tracks)}",
+            "",
+        ]
+
+        if not unique_tracks:
+            lines.append("_Nothing to add — all source tracks already exist in target._")
+            return "\n".join(lines)
+
+        # Show what would be added
+        lines.append("**Tracks to add:**")
+        for i, track in enumerate(unique_tracks[:30], 1):
+            name = track.get("name", "Unknown")
+            artists = ", ".join(a["name"] for a in track.get("artists", []))
+            lines.append(f"{i}. {name} — {artists}")
+        if len(unique_tracks) > 30:
+            lines.append(f"_...and {len(unique_tracks) - 30} more_")
+
+        if dry_run:
+            lines.append(
+                "\n_Dry run — no changes made. "
+                "Call again with `dry_run=False` to add these tracks._"
+            )
+        else:
+            uris_to_add = [t["uri"] for t in unique_tracks]
+            for batch in chunked(uris_to_add, 100):
+                sp.playlist_add_items(target_playlist_id, batch)
+            lines.append(f"\nAdded **{len(unique_tracks)}** tracks to **{target_name}**.")
 
         return "\n".join(lines)

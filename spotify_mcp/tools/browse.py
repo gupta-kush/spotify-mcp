@@ -1,4 +1,4 @@
-"""Browse tools — 4 tools for looking up tracks, albums, artists, and users."""
+"""Browse tools — 5 tools for looking up tracks, albums, artists, users, and artist discographies."""
 
 import logging
 from ..utils.spotify_client import get_client
@@ -168,5 +168,80 @@ def register(mcp):
                 name = p.get("name", "Unknown")
                 tracks = p.get("tracks", {}).get("total", 0)
                 lines.append(f"{i}. **{name}** — {tracks} tracks | ID: `{p.get('id', '')}`")
+
+        return "\n".join(lines)
+
+    @mcp.tool()
+    @catch_spotify_errors
+    def spotify_get_artist_albums(artist_id: str, include_groups: str = "album,single", limit: int = 50) -> str:
+        """List all albums, singles, and compilations for an artist."""
+        sp = get_client()
+        artist_id = parse_spotify_id(artist_id)
+        limit = max(1, min(50, limit))
+
+        # Get artist name
+        artist = sp.artist(artist_id)
+        artist_name = artist.get("name", "Unknown")
+
+        # Paginate to get all results
+        albums = []
+        offset = 0
+        while True:
+            page = sp.artist_albums(artist_id, album_type=include_groups, limit=limit, offset=offset)
+            page_items = page.get("items", [])
+            albums.extend(page_items)
+            if page.get("next") is None or not page_items:
+                break
+            offset += len(page_items)
+
+        if not albums:
+            return f"No releases found for **{artist_name}** with groups: {include_groups}"
+
+        lines = [
+            f"# {artist_name} — Discography",
+            "",
+            f"**{len(albums)} releases** (filter: {include_groups})",
+            "",
+        ]
+
+        # Group by album type
+        by_type = {}
+        for album in albums:
+            atype = album.get("album_type", "unknown").title()
+            by_type.setdefault(atype, []).append(album)
+
+        for atype in ["Album", "Single", "Compilation"]:
+            group = by_type.get(atype, [])
+            if not group:
+                continue
+            lines.append(f"## {atype}s ({len(group)})")
+            lines.append("")
+            for i, album in enumerate(group, 1):
+                name = album.get("name", "Unknown")
+                release_date = album.get("release_date", "?")
+                total_tracks = album.get("total_tracks", "?")
+                lines.append(
+                    f"{i}. **{name}** — {release_date} — "
+                    f"{total_tracks} track{'s' if total_tracks != 1 else ''} | "
+                    f"ID: `{album.get('id', '')}`"
+                )
+            lines.append("")
+
+        # Any remaining types not in the standard list
+        for atype, group in by_type.items():
+            if atype in ("Album", "Single", "Compilation"):
+                continue
+            lines.append(f"## {atype} ({len(group)})")
+            lines.append("")
+            for i, album in enumerate(group, 1):
+                name = album.get("name", "Unknown")
+                release_date = album.get("release_date", "?")
+                total_tracks = album.get("total_tracks", "?")
+                lines.append(
+                    f"{i}. **{name}** — {release_date} — "
+                    f"{total_tracks} track{'s' if total_tracks != 1 else ''} | "
+                    f"ID: `{album.get('id', '')}`"
+                )
+            lines.append("")
 
         return "\n".join(lines)

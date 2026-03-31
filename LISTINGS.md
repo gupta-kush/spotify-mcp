@@ -1,27 +1,27 @@
 # Directory Listings & Submission Guide
 
-Ready-to-paste copy for every MCP directory. Submit in this order for maximum cascade effect.
+Ready-to-paste copy for every MCP directory. Submit in this order (earlier ones feed into later ones).
 
 ---
 
 ## Short Descriptions (reuse everywhere)
 
 **One-liner (under 80 chars):**
-> Control Spotify from Claude, Cursor, or any MCP client. Includes 93 tools.
+> Spotify MCP server with 100+ tools. Works after the Feb 2026 API changes.
 
 **Medium (1 paragraph):**
-> 93-tool Spotify MCP server — not just play/pause, but smart shuffling with energy arcs, natural language song search ("find that sad piano song from the 2000s"), artist network mapping, vibe analysis, taste evolution tracking, playlist merge/diff/dedup, and way more. Built for Spotify's post-February 2026 API where most other servers broke. PKCE auth — no client secret needed.
+> Spotify MCP server with 100+ tools. Goes well beyond play/pause: smart shuffle with energy arcs, natural language song search ("find that sad piano song from the 2000s"), artist network mapping, vibe analysis, taste evolution tracking, playlist merge/diff/dedup, library indexing. Built for Spotify's post-February 2026 API. PKCE auth, no client secret needed.
 
 **Feature bullets (for forms that ask for features):**
-- 93 tools across playback, playlists, search, library, discovery, analytics, and curation
-- Smart Shuffle with 6 strategies including energy arcs (chill → hype → chill)
-- Natural language song finder — "that sad song with strings by Pink Floyd from the 90s"
-- Vibe engine — mood analysis without the deprecated audio-features API
-- Artist network mapping — explore 100 connected artists
-- Taste evolution — how your listening has changed over time
-- Playlist diff, merge, deduplicate, and cleanup tools
+- 100+ tools across playback, playlists, search, library, discovery, analytics, and curation
+- Smart Shuffle with 6 strategies including energy arcs (chill to hype to chill)
+- Natural language song finder: "that sad song with strings by Pink Floyd from the 90s"
+- Vibe engine: mood analysis without the deprecated audio-features API
+- Artist network mapping: explore 100 connected artists
+- Taste evolution: how your listening has changed over time
+- Playlist diff, merge, deduplicate, subset detection, and cleanup tools
 - Works after Spotify's February 2026 API deprecations
-- PKCE auth — only a Client ID needed, no client secret
+- PKCE auth, only a Client ID needed, no client secret
 - Configurable toolsets for clients with tool limits (Cursor: `--toolsets=core`)
 
 ---
@@ -34,9 +34,9 @@ Ready-to-paste copy for every MCP directory. Submit in this order for maximum ca
 
 **Category:** `### 🎨 Art & Culture` (where music tools live)
 
-**Entry to add** (insert alphabetically — after entries starting with "s", before "t"):
+**Entry to add** (insert alphabetically, after entries starting with "s", before "t"):
 ```markdown
-- [gupta-kush/spotify-mcp](https://github.com/gupta-kush/spotify-mcp) 🐍 ☁️ - 93-tool Spotify server with smart shuffle, natural language song search, vibe analysis, artist network mapping, taste evolution, and playlist power tools. Works after Spotify's Feb 2026 API changes.
+- [gupta-kush/spotify-mcp](https://github.com/gupta-kush/spotify-mcp) 🐍 ☁️ - 100+ tool Spotify server. Smart shuffle, natural language song search, vibe analysis, artist network mapping, taste evolution, playlist diff/merge/dedup. Works after Spotify's Feb 2026 API changes.
 ```
 
 **PR title:**
@@ -47,15 +47,15 @@ Add gupta-kush/spotify-mcp to Art & Culture 🤖🤖🤖
 
 **PR body:**
 ```
-Adds a 93-tool Spotify MCP server to the Art & Culture section.
+Adding my Spotify MCP server (100+ tools) to Art & Culture.
 
-This is significantly more comprehensive than the existing Spotify entry
-(spotify-bulk-actions-mcp, 18 tools). Includes smart shuffle with energy arcs,
-natural language song search, vibe engine, artist network mapping, taste
-evolution tracking, and playlist power tools.
+The existing Spotify entry (spotify-bulk-actions-mcp) has 18 tools focused on
+bulk operations. This one covers playback, search, library management, plus
+things like smart shuffle with energy arcs, natural language song search,
+artist network mapping, vibe analysis, and playlist diff/merge/dedup.
 
-Published on PyPI (`uvx spotify-mcp`), supports PKCE auth, and works after
-Spotify's February 2026 API deprecations.
+Published on PyPI (`uvx spotify-mcp`), PKCE auth, works after Spotify's
+February 2026 API deprecations.
 ```
 
 ---
@@ -75,22 +75,22 @@ The existing entry is:
 
 Add this below it:
 ```markdown
-- <img src="https://cdn.simpleicons.org/spotify/1DB954" height="14"/> [Spotify](https://github.com/gupta-kush/spotify-mcp) - 93-tool Spotify server with smart shuffle, natural language song search, vibe analysis, artist network mapping, and playlist power tools.
+- <img src="https://cdn.simpleicons.org/spotify/1DB954" height="14"/> [Spotify](https://github.com/gupta-kush/spotify-mcp) - 100+ tool Spotify server. Smart shuffle, natural language song search, vibe analysis, artist network mapping, playlist diff/merge/dedup.
 ```
 
 **PR title:**
 ```
-Add gupta-kush/spotify-mcp — 93-tool Spotify MCP server
+Add gupta-kush/spotify-mcp (100+ tool Spotify MCP server)
 ```
 
 **PR body:**
 ```
-Adds a comprehensive 93-tool Spotify MCP server alongside the existing entry.
+Adding my Spotify MCP server alongside the existing entry.
 
-The existing varunneal/spotify-mcp appears inactive (last commit March 2025,
-PRs ignored) with ~15 tools. This server has 93 tools including smart shuffle,
-vibe engine, artist network mapping, natural language song finder, and taste
-evolution tracking. Works after Spotify's Feb 2026 API changes.
+varunneal/spotify-mcp looks inactive (last commit March 2025, ~15 tools).
+This one has 100+ tools covering playback, search, library, smart shuffle,
+vibe analysis, artist network mapping, natural language song finder, taste
+evolution, and playlist operations. Works after Spotify's Feb 2026 API changes.
 
 Published on PyPI: `uvx spotify-mcp`
 ```
@@ -111,7 +111,7 @@ mcp-publisher publish # publishes to the registry
 
 - **Name:** `spotify-mcp`
 - **Display Name:** `Spotify MCP Server`
-- **Description:** 93-tool Spotify MCP server — smart shuffle, natural language song search, vibe analysis, artist network mapping, taste evolution, and playlist power tools. Works after Spotify's Feb 2026 API changes.
+- **Description:** Spotify MCP server with 100+ tools. Smart shuffle, natural language song search, vibe analysis, artist network mapping, taste evolution, playlist diff/merge/dedup. Works after Spotify's Feb 2026 API changes.
 - **Category:** `media` or `entertainment`
 - **Repository:** `https://github.com/gupta-kush/spotify-mcp`
 - **Install command:** `uvx spotify-mcp`
@@ -153,7 +153,7 @@ npx @anthropic-ai/smithery-cli publish https://github.com/gupta-kush/spotify-mcp
 **Fields:**
 - **Name:** Spotify MCP Server
 - **URL:** `https://github.com/gupta-kush/spotify-mcp`
-- **Description:** 93-tool Spotify MCP server — smart shuffle, natural language song search, vibe analysis, artist network mapping, taste evolution, and playlist power tools. Works after Spotify's Feb 2026 API changes. PKCE auth, configurable toolsets.
+- **Description:** Spotify MCP server with 100+ tools. Smart shuffle, natural language song search, vibe analysis, artist network mapping, taste evolution, playlist diff/merge/dedup. Works after Spotify's Feb 2026 API changes. PKCE auth, configurable toolsets.
 - **Category:** Media / Entertainment
 
 ---
@@ -170,7 +170,7 @@ npx @anthropic-ai/smithery-cli publish https://github.com/gupta-kush/spotify-mcp
 
 ### 8. MCPServers.org
 
-**How:** Go to https://mcpservers.org/submit — web form.
+**How:** Go to https://mcpservers.org/submit (web form).
 
 **Fields:**
 - **Name:** Spotify MCP Server
@@ -181,7 +181,7 @@ npx @anthropic-ai/smithery-cli publish https://github.com/gupta-kush/spotify-mcp
 
 ### 9. MCPMarket.com
 
-**How:** Go to https://mcpmarket.com/submit — web form.
+**How:** Go to https://mcpmarket.com/submit (web form).
 
 **Fields:**
 - **Name:** Spotify MCP Server
@@ -218,7 +218,7 @@ npx @anthropic-ai/smithery-cli publish https://github.com/gupta-kush/spotify-mcp
 
 ### 13. LobeHub
 
-**How:** PR to https://github.com/lobehub/lobe-chat-plugins — add your server to their plugin index.
+**How:** PR to https://github.com/lobehub/lobe-chat-plugins to add your server to their plugin index.
 
 ---
 
@@ -249,7 +249,7 @@ mcp, model-context-protocol, spotify, claude, ai, python, mcp-server, fastmcp, s
 
 **Description** (Settings → General):
 ```
-93-tool Spotify MCP server for Claude, Cursor, and any MCP client. Smart shuffle, vibe analysis, natural language search, artist networks, and more.
+Spotify MCP server with 100+ tools. Smart shuffle, vibe analysis, natural language song search, artist network mapping, playlist diff/merge/dedup, library indexing.
 ```
 
 **Website** (Settings → General):

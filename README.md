@@ -3,55 +3,30 @@
 
 [![PyPI](https://img.shields.io/pypi/v/spotify-mcp)](https://pypi.org/project/spotify-mcp/)
 [![Tests](https://github.com/gupta-kush/spotify-mcp/actions/workflows/test.yml/badge.svg)](https://github.com/gupta-kush/spotify-mcp/actions/workflows/test.yml)
-![96 Tools](https://img.shields.io/badge/tools-96-brightgreen)
+![100+ Tools](https://img.shields.io/badge/tools-100%2B-brightgreen)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=spotify&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJzcG90aWZ5LW1jcCJdLCJlbnYiOnsiU1BPVElGWV9DTElFTlRfSUQiOiJ5b3VyX2NsaWVudF9pZCJ9fQ==)
 
-Control Spotify from Claude, Cursor, or any MCP client. **96 tools** -- not just play/pause, but smart shuffling, vibe analysis, natural language song search, artist network mapping, taste evolution tracking, and way more. Built for Spotify's [post-February 2026 API](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security) where most other servers broke.
+Spotify MCP server with **100+ tools** for Claude, Cursor, or any MCP client. Smart shuffle, vibe analysis, natural language song search, artist network mapping, playlist diff/merge/dedup, library indexing. Built for Spotify's [post-February 2026 API](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security).
 
 <!-- TODO: Replace with actual demo GIF -->
 
-## Why this one?
-
-There are 30+ Spotify MCP servers out there. Most give you 10-15 tools covering play, pause, search, done. This one goes deeper:
-
-| | spotify-mcp | Typical server |
-|---|---|---|
-| **Tools** | **96** | 5-15 |
-| **Smart shuffle** (6 strategies including energy arcs) | Yes | No |
-| **Vibe engine** -- mood analysis without audio-features API | Yes | No |
-| **"Find that sad piano song from the 2000s"** | Yes | No |
-| **Map an artist's network** of 100 related artists | Yes | No |
-| **"How has my taste changed?"** -- evolution tracking | Yes | No |
-| **Library index** -- AI playlists from songs you already know | Yes | No |
-| **Destructive tools stripped by default** -- safe for auto-accept | Yes | No |
-| **Merge / diff / deduplicate** playlists | Yes | No |
-| **Works after Spotify's Feb 2026 API changes** | Yes | Most broke |
-| **PKCE auth** -- no client secret needed | Yes | Rare |
-
 ## Quick Start
 
-### 1. Install
+### 1. Get a Spotify Client ID
+
+Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard), create an app, set the redirect URI to `http://127.0.0.1:8888/callback`, check **Web API**, and copy your **Client ID**. No client secret needed (PKCE auth).
+
+### 2. Install and Configure
+
+**Claude Code** -- one command:
 
 ```bash
-uvx spotify-mcp
+claude mcp add spotify -- uvx spotify-mcp
 ```
 
-Or with pip:
-
-```bash
-pip install spotify-mcp
-```
-
-### 2. Get Spotify Credentials
-
-1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Click **Create App**
-3. Set the **Redirect URI** to `http://127.0.0.1:8888/callback`
-4. Check **Web API** and click **Save**
-5. Copy your **Client ID** (Client Secret is optional -- PKCE auth works without it)
-
-### 3. Configure Your Client
+Then set your client ID: `claude mcp add spotify -e SPOTIFY_CLIENT_ID=your_client_id -- uvx spotify-mcp`
 
 **Claude Desktop** -- add to `claude_desktop_config.json`:
 
@@ -85,29 +60,48 @@ pip install spotify-mcp
 }
 ```
 
-### 4. First Run
+Or install with pip: `pip install spotify-mcp`
 
-The first time you use a Spotify tool, your browser opens for OAuth authorization. Grant access and the token is cached locally.
+### 3. Authorize
+
+The first time you use a Spotify tool, your browser opens for OAuth. Grant access and the token is cached locally.
+
+## Why this one?
+
+There are 30+ Spotify MCP servers out there. Most have 10-15 tools covering play, pause, and search.
+
+| | spotify-mcp | Typical server |
+|---|---|---|
+| **Tools** | **100+** | 5-15 |
+| **Smart shuffle** (6 strategies incl. energy arcs) | Yes | No |
+| **Vibe engine** -- mood analysis without audio-features | Yes | No |
+| **Natural language song search** | Yes | No |
+| **Artist network mapping** (100 related artists) | Yes | No |
+| **Taste evolution tracking** | Yes | No |
+| **Library index** -- AI playlists from your own songs | Yes | No |
+| **Destructive tools stripped by default** | Yes | No |
+| **Merge / diff / deduplicate** playlists | Yes | No |
+| **Works after Feb 2026 API changes** | Yes | Most broke |
+| **PKCE auth** -- no client secret needed | Yes | Rare |
 
 ## What can you do with it?
 
-Just talk to your AI assistant like you'd talk to a friend who has access to your Spotify:
+Some things you can ask:
 
 - "Play Bohemian Rhapsody"
-- "Make my playlist start chill and build to high energy" -- smart shuffle reorders it with an energy arc
-- "Find that sad song with strings by Pink Floyd from the 90s" -- natural language, not exact titles
-- "How has my music taste changed over time?" -- compares your short/medium/long term listening
-- "Map Radiohead's related artist network" -- explores up to 100 connected artists
-- "Create a 90s era playlist"
-- "Compare my Gym and Running playlists" -- side-by-side genre and artist breakdown
-- "Clean up my old playlist" -- finds and removes unavailable tracks and duplicates
-- "What's the vibe of my Summer playlist?" -- genre-based energy and mood analysis
-- "Create a radio playlist based on Radiohead" -- samples related artists' catalogs
-- "When do I listen to music the most?" -- hour-of-day and day-of-week patterns
+- "Make my playlist start chill and build to high energy"
+- "Find that sad song with strings by Pink Floyd from the 90s"
+- "How has my music taste changed over time?"
+- "Map Radiohead's related artist network"
+- "Compare my Gym and Running playlists"
+- "Clean up my old playlist" -- removes unavailable tracks and duplicates
+- "What's the vibe of my Summer playlist?"
+- "Create a radio playlist based on Radiohead"
+- "When do I listen to music the most?"
 
 ## Toolsets
 
-By default, all 96 tools are loaded (minus destructive tools -- see [Safety](#safety) below). For clients with tool limits (Cursor: 40 max), use `--toolsets` to load only what you need:
+All tools load by default (minus destructive tools -- see [Safety](#safety)). For clients with tool limits, use `--toolsets`:
 
 ```bash
 spotify-mcp --toolsets=core              # ~27 tools: playback, playlists, search, library, browse, stats
@@ -123,11 +117,11 @@ Available toolsets: `core`, `social`, `discovery`, `power`, `destructive`, `all`
 
 ## Safety
 
-**Destructive tools are stripped by default.** Tools that remove tracks, unfollow artists, or delete content are not loaded unless you explicitly opt in with `--toolsets=all,destructive`. This makes the server safe for auto-accept mode -- the AI literally cannot call tools that don't exist.
+Destructive tools (remove tracks, unfollow artists, delete content) are **not loaded** unless you opt in with `--toolsets=all,destructive`. Safe for auto-accept mode -- the AI cannot call tools that don't exist.
 
 Affected tools: `spotify_remove_from_playlist`, `spotify_remove_saved_tracks`, `spotify_remove_saved_albums`, `spotify_remove_saved_shows`, `spotify_unfollow_playlist`, `spotify_unfollow_artists`, `spotify_unfollow_users`
 
-Even when destructive tools are enabled, they default to `dry_run=True` -- showing a preview of what would happen without actually executing. The AI must explicitly pass `dry_run=False` to perform the action.
+Even when enabled, destructive tools default to `dry_run=True` -- showing a preview without executing. Pass `dry_run=False` to perform the action.
 
 ## Tool Reference
 
@@ -189,7 +183,7 @@ Even when destructive tools are enabled, they default to `dry_run=True` -- showi
 </details>
 
 <details>
-<summary><strong>Stats & Insights (6 tools)</strong></summary>
+<summary><strong>Stats & Insights (7 tools)</strong></summary>
 
 | Tool | Description |
 |------|-------------|
@@ -199,6 +193,7 @@ Even when destructive tools are enabled, they default to `dry_run=True` -- showi
 | `spotify_listening_patterns` | When you listen -- hour and day distributions |
 | `spotify_taste_profile` | Genre diversity and niche artist analysis |
 | `spotify_playlist_compare` | Compare multiple playlists side by side |
+| `spotify_playlist_freshness` | When each playlist was last updated, sorted by staleness |
 
 </details>
 
@@ -251,19 +246,20 @@ Even when destructive tools are enabled, they default to `dry_run=True` -- showi
 </details>
 
 <details>
-<summary><strong>Browse (4 tools)</strong></summary>
+<summary><strong>Browse (5 tools)</strong></summary>
 
 | Tool | Description |
 |------|-------------|
 | `spotify_get_track` | Full track details (popularity, ISRC, preview URL) |
 | `spotify_get_album` | Album details with full tracklist |
 | `spotify_get_artist` | Artist profile (followers, popularity, genres) |
+| `spotify_get_artist_albums` | List an artist's albums, singles, and compilations |
 | `spotify_get_user` | User profile with public playlists |
 
 </details>
 
 <details>
-<summary><strong>Playlist Power Tools (6 tools)</strong></summary>
+<summary><strong>Playlist Power Tools (8 tools)</strong></summary>
 
 | Tool | Description |
 |------|-------------|
@@ -273,6 +269,8 @@ Even when destructive tools are enabled, they default to `dry_run=True` -- showi
 | `spotify_export_playlist` | Export playlist data |
 | `spotify_playlist_diff` | Compare track differences between playlists |
 | `spotify_find_playlist_overlaps` | Scan all playlists for shared tracks |
+| `spotify_find_playlist_subsets` | Find playlists that are subsets of others |
+| `spotify_absorb_playlist` | Merge unique tracks from one playlist into another |
 
 </details>
 
@@ -345,7 +343,7 @@ Even when destructive tools are enabled, they default to `dry_run=True` -- showi
 
 | Tool | Description |
 |------|-------------|
-| `spotify_artist_deep_dive` | Comprehensive artist deep dive report |
+| `spotify_artist_deep_dive` | Full artist profile with discography and stats |
 | `spotify_artist_timeline` | Artist's career timeline with all releases |
 | `spotify_artist_network` | Map an artist's related artist network |
 
@@ -363,7 +361,7 @@ Even when destructive tools are enabled, they default to `dry_run=True` -- showi
 <details>
 <summary><strong>Library Index (3 tools)</strong></summary>
 
-Sync your full Spotify library to a local index, then let your AI assistant create personalized playlists from songs you actually know and love -- not random catalog tracks.
+Sync your Spotify library to a local index, then let your AI create playlists from songs you already know -- not random catalog tracks.
 
 | Tool | Description |
 |------|-------------|
@@ -371,31 +369,27 @@ Sync your full Spotify library to a local index, then let your AI assistant crea
 | `spotify_library_stats` | Artist counts, playlist names, and dates -- compact overview for AI reasoning |
 | `spotify_query_library` | Filter your library by artist, playlist, date range, track/album name |
 
-**Example workflow:**
+**Example:** "Make a playlist with my favorite indie rock songs from this year" -- AI checks your library stats, picks matching artists, queries by date range, and builds a playlist from songs you already have.
 
-> "Make a playlist with my favorite indie rock songs from this year"
->
-> AI calls `spotify_library_stats` to see your artist landscape, picks matching artists using its music knowledge, calls `spotify_query_library` with those artists + `added_after="2026-01-01"`, then creates a playlist with songs you already know.
-
-The sync stores data locally at `%LOCALAPPDATA%\spotify-mcp\library.json` (Windows) or `~/.cache/spotify-mcp/library.json` (Linux/Mac). Only syncs playlists you created -- skips followed/saved playlists by others.
+Data stored at `%LOCALAPPDATA%\spotify-mcp\library.json` (Windows) or `~/.cache/spotify-mcp/library.json` (Linux/Mac). Only syncs playlists you created.
 
 </details>
 
 ## Setup Options
 
-### Option A: Environment Variables (Recommended)
+### Environment Variables (Recommended)
 
-Set `SPOTIFY_CLIENT_ID` (and optionally `SPOTIFY_CLIENT_SECRET`) in your MCP client config's `env` field. This is the simplest approach.
+Set `SPOTIFY_CLIENT_ID` (and optionally `SPOTIFY_CLIENT_SECRET`) in your MCP client config's `env` field.
 
-### Option B: Interactive Setup
+### Interactive Setup
 
 ```bash
 spotify-mcp-setup
 ```
 
-Walks you through entering credentials and saves them to `~/.config/spotify-mcp/.env` (Linux/Mac) or `%APPDATA%\spotify-mcp\.env` (Windows).
+Walks you through credentials and saves them to `~/.config/spotify-mcp/.env` (Linux/Mac) or `%APPDATA%\spotify-mcp\.env` (Windows).
 
-### Option C: Manual .env File
+### Manual .env File
 
 Create `.env` in `~/.config/spotify-mcp/` (or `%APPDATA%\spotify-mcp\` on Windows):
 
@@ -404,26 +398,21 @@ SPOTIFY_CLIENT_ID=your_client_id
 SPOTIFY_REDIRECT_URI=http://127.0.0.1:8888/callback
 ```
 
-Add `SPOTIFY_CLIENT_SECRET=your_secret` if you prefer the traditional OAuth flow over PKCE.
-
-### Authentication Modes
-
-- **PKCE (default):** Only needs `SPOTIFY_CLIENT_ID`. No client secret required. Recommended for most users.
-- **OAuth:** If `SPOTIFY_CLIENT_SECRET` is also set, uses the traditional OAuth flow. Backward-compatible with existing setups.
+Add `SPOTIFY_CLIENT_SECRET=your_secret` if you prefer traditional OAuth over PKCE.
 
 ## Finding Spotify IDs
 
-Most tools accept Spotify IDs, URIs, or URLs interchangeably:
+Most tools accept IDs, URIs, or URLs interchangeably:
 
 - **Search first:** Use `spotify_search` to find anything by name
 - **Copy from Spotify:** Right-click any item -> Share -> Copy Spotify URI
 - **From URLs:** `https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC` -> `4uLU6hMCjMI75M1A2tKUQC`
 
-## A note on Spotify's Feb 2026 API changes
+## Spotify's Feb 2026 API Changes
 
-Spotify [removed a bunch of endpoints](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security) in February 2026: `audio-features`, `audio-analysis`, `recommendations`, `artist/top-tracks`, all batch endpoints, and `browse/categories`. Search is now capped at 10 results per page. Most Spotify MCP servers just... broke.
+Spotify [removed several endpoints](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security) in February 2026: `audio-features`, `audio-analysis`, `recommendations`, `artist/top-tracks`, all batch endpoints, and `browse/categories`. Search capped at 10 results per page. Most Spotify MCP servers broke.
 
-This server was built with those constraints in mind. Discovery uses **search + related artists + genre mapping** instead of the old recommendations API. The vibe engine estimates energy from artist genre data rather than the now-dead audio-features endpoint. It's not perfect, but it works.
+This server was built with those constraints in mind. Discovery uses search + related artists + genre mapping instead of the old recommendations API. The vibe engine estimates energy from genre data rather than audio-features. Not perfect, but it works.
 
 ## Architecture
 
@@ -443,7 +432,7 @@ spotify_mcp/
 Open Spotify on any device before using playback commands.
 
 ### OAuth redirect fails
-Ensure the redirect URI in your config **exactly** matches the Spotify Developer Dashboard. Default: `http://127.0.0.1:8888/callback` (not https).
+Ensure the redirect URI **exactly** matches the Spotify Developer Dashboard. Default: `http://127.0.0.1:8888/callback` (not https).
 
 ### Token expired or corrupted
 Delete `.spotify_token_cache` from `~/.cache/spotify-mcp/` (or `%LOCALAPPDATA%\spotify-mcp\`) and restart.
@@ -461,4 +450,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code conventions, 
 
 ---
 
-If this tool was useful to you, please leave a star on the repo and any feedback you might have. Thank you!
+If you find this useful, a star helps others find it too.
