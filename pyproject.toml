@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "spotify-mcp"
 version = "1.0.0"
-description = "Spotify MCP server with 100+ tools for playback, playlists, discovery, analytics, and curation"
+description = "Control Spotify from Claude, Cursor, or any MCP client. 100+ tools for playback, playlists, discovery, and curation."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"

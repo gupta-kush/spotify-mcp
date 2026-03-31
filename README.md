@@ -8,7 +8,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=spotify&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJzcG90aWZ5LW1jcCJdLCJlbnYiOnsiU1BPVElGWV9DTElFTlRfSUQiOiJ5b3VyX2NsaWVudF9pZCJ9fQ==)
 
-Spotify MCP server with **100+ tools** for Claude, Cursor, or any MCP client. Smart shuffle, vibe analysis, natural language song search, artist network mapping, playlist diff/merge/dedup, library indexing. Built for Spotify's [post-February 2026 API](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security).
+Control Spotify from Claude, Cursor, or any MCP client. **100+ tools** for playback, search, playlist management, smart shuffle, vibe analysis, natural language song search, artist exploration, and library indexing. Just `uvx spotify-mcp` to get started.
 
 <!-- TODO: Replace with actual demo GIF -->
 

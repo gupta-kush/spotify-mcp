@@ -54,7 +54,7 @@ There's already a `varunneal/spotify-mcp` entry under Social Media. Add ours nex
 
 **Add below existing Spotify entry:**
 ```markdown
-- <img src="https://cdn.simpleicons.org/spotify/1DB954" height="14"/> [Spotify](https://github.com/gupta-kush/spotify-mcp)<sup><sup>2</sup></sup> - 100+ tool Spotify server with smart shuffle, natural language search, and playlist management. Works after Spotify's Feb 2026 API changes.
+- <img src="https://cdn.simpleicons.org/spotify/1DB954" height="14"/> [Spotify](https://github.com/gupta-kush/spotify-mcp)<sup><sup>2</sup></sup> - Control Spotify with 100+ tools: playback, search, smart shuffle, vibe analysis, natural language song search, playlist management, and library indexing.
 ```
 
 **Update existing entry** to add superscript 1 after its link closing paren.
@@ -66,7 +66,7 @@ There's already a `varunneal/spotify-mcp` entry under Social Media. Add ours nex
 ## Reusable Copy
 
 **One-liner:**
-> Spotify MCP server with 100+ tools. Works after the Feb 2026 API changes.
+> Control Spotify from Claude, Cursor, or any MCP client. 100+ tools for playback, playlists, discovery, and curation.
 
 **One paragraph:**
-> Spotify MCP server with 100+ tools. Goes well beyond play/pause: smart shuffle with energy arcs, natural language song search ("find that sad piano song from the 2000s"), artist network mapping, vibe analysis, taste evolution tracking, playlist merge/diff/dedup, library indexing. Built for Spotify's post-February 2026 API. PKCE auth, no client secret needed.
+> Control Spotify from Claude, Cursor, or any MCP client. 100+ tools covering playback, search, playlist management, smart shuffle with energy arcs, natural language song search ("find that sad piano song from the 2000s"), artist network mapping, vibe analysis, taste evolution tracking, playlist diff/merge/dedup, and library indexing. Only needs a Spotify Client ID to get started (PKCE auth, no client secret).
