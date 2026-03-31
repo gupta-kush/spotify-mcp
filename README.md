@@ -1,6 +1,8 @@
 <!-- mcp-name: io.github.gupta-kush/spotify-mcp -->
 # Spotify MCP Server
 
+[![SafeSkill 91/100](https://img.shields.io/badge/SafeSkill-91%2F100_Verified%20Safe-brightgreen)](https://safeskill.dev/scan/gupta-kush-spotify-mcp)
+
 [![PyPI](https://img.shields.io/pypi/v/spotify-mcp)](https://pypi.org/project/spotify-mcp/)
 [![Tests](https://github.com/gupta-kush/spotify-mcp/actions/workflows/test.yml/badge.svg)](https://github.com/gupta-kush/spotify-mcp/actions/workflows/test.yml)
 ![100+ Tools](https://img.shields.io/badge/tools-100%2B-brightgreen)
