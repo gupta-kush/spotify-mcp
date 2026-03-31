@@ -20,7 +20,7 @@ Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 
 ### 2. Install and Configure
 
-**Claude Code** -- one command:
+**Claude Code** (one command):
 
 ```bash
 claude mcp add spotify -- uvx spotify-mcp
@@ -28,7 +28,7 @@ claude mcp add spotify -- uvx spotify-mcp
 
 Then set your client ID: `claude mcp add spotify -e SPOTIFY_CLIENT_ID=your_client_id -- uvx spotify-mcp`
 
-**Claude Desktop** -- add to `claude_desktop_config.json`:
+**Claude Desktop** (add to `claude_desktop_config.json`):
 
 ```json
 {
@@ -44,7 +44,7 @@ Then set your client ID: `claude mcp add spotify -e SPOTIFY_CLIENT_ID=your_clien
 }
 ```
 
-**Cursor / VS Code** -- use the same config, but load only core tools to stay under the 40-tool limit:
+**Cursor / VS Code** (same config, but load only core tools to stay under the 40-tool limit):
 
 ```json
 {
@@ -74,15 +74,15 @@ There are 30+ Spotify MCP servers out there. Most have 10-15 tools covering play
 |---|---|---|
 | **Tools** | **100+** | 5-15 |
 | **Smart shuffle** (6 strategies incl. energy arcs) | Yes | No |
-| **Vibe engine** -- mood analysis without audio-features | Yes | No |
+| **Vibe engine** (mood analysis without audio-features) | Yes | No |
 | **Natural language song search** | Yes | No |
 | **Artist network mapping** (100 related artists) | Yes | No |
 | **Taste evolution tracking** | Yes | No |
-| **Library index** -- AI playlists from your own songs | Yes | No |
+| **Library index** (AI playlists from your own songs) | Yes | No |
 | **Destructive tools stripped by default** | Yes | No |
 | **Merge / diff / deduplicate** playlists | Yes | No |
 | **Works after Feb 2026 API changes** | Yes | Most broke |
-| **PKCE auth** -- no client secret needed | Yes | Rare |
+| **PKCE auth** (no client secret needed) | Yes | Rare |
 
 ## What can you do with it?
 
@@ -94,14 +94,14 @@ Some things you can ask:
 - "How has my music taste changed over time?"
 - "Map Radiohead's related artist network"
 - "Compare my Gym and Running playlists"
-- "Clean up my old playlist" -- removes unavailable tracks and duplicates
+- "Clean up my old playlist" (removes unavailable tracks and duplicates)
 - "What's the vibe of my Summer playlist?"
 - "Create a radio playlist based on Radiohead"
 - "When do I listen to music the most?"
 
 ## Toolsets
 
-All tools load by default (minus destructive tools -- see [Safety](#safety)). For clients with tool limits, use `--toolsets`:
+All tools load by default, minus destructive tools (see [Safety](#safety)). For clients with tool limits, use `--toolsets`:
 
 ```bash
 spotify-mcp --toolsets=core              # ~27 tools: playback, playlists, search, library, browse, stats
@@ -117,11 +117,11 @@ Available toolsets: `core`, `social`, `discovery`, `power`, `destructive`, `all`
 
 ## Safety
 
-Destructive tools (remove tracks, unfollow artists, delete content) are **not loaded** unless you opt in with `--toolsets=all,destructive`. Safe for auto-accept mode -- the AI cannot call tools that don't exist.
+Destructive tools (remove tracks, unfollow artists, delete content) are **not loaded** unless you opt in with `--toolsets=all,destructive`. Safe for auto-accept mode since the AI cannot call tools that don't exist.
 
 Affected tools: `spotify_remove_from_playlist`, `spotify_remove_saved_tracks`, `spotify_remove_saved_albums`, `spotify_remove_saved_shows`, `spotify_unfollow_playlist`, `spotify_unfollow_artists`, `spotify_unfollow_users`
 
-Even when enabled, destructive tools default to `dry_run=True` -- showing a preview without executing. Pass `dry_run=False` to perform the action.
+Even when enabled, destructive tools default to `dry_run=True`, showing a preview without executing. Pass `dry_run=False` to perform the action.
 
 ## Tool Reference
 
@@ -190,7 +190,7 @@ Even when enabled, destructive tools default to `dry_run=True` -- showing a prev
 | `spotify_top_tracks` | Your top tracks by time range |
 | `spotify_top_artists` | Your top artists by time range |
 | `spotify_recently_played` | Recent listening history |
-| `spotify_listening_patterns` | When you listen -- hour and day distributions |
+| `spotify_listening_patterns` | When you listen (hour and day distributions) |
 | `spotify_taste_profile` | Genre diversity and niche artist analysis |
 | `spotify_playlist_compare` | Compare multiple playlists side by side |
 | `spotify_playlist_freshness` | When each playlist was last updated, sorted by staleness |
@@ -361,15 +361,15 @@ Even when enabled, destructive tools default to `dry_run=True` -- showing a prev
 <details>
 <summary><strong>Library Index (3 tools)</strong></summary>
 
-Sync your Spotify library to a local index, then let your AI create playlists from songs you already know -- not random catalog tracks.
+Sync your Spotify library to a local index, then let your AI create playlists from songs you already know instead of random catalog tracks.
 
 | Tool | Description |
 |------|-------------|
 | `spotify_sync_library` | Sync liked songs and your playlists to a local JSON index |
-| `spotify_library_stats` | Artist counts, playlist names, and dates -- compact overview for AI reasoning |
+| `spotify_library_stats` | Artist counts, playlist names, and dates (compact overview for AI reasoning) |
 | `spotify_query_library` | Filter your library by artist, playlist, date range, track/album name |
 
-**Example:** "Make a playlist with my favorite indie rock songs from this year" -- AI checks your library stats, picks matching artists, queries by date range, and builds a playlist from songs you already have.
+**Example:** "Make a playlist with my favorite indie rock songs from this year." The AI checks your library stats, picks matching artists, queries by date range, and builds a playlist from songs you already have.
 
 Data stored at `%LOCALAPPDATA%\spotify-mcp\library.json` (Windows) or `~/.cache/spotify-mcp/library.json` (Linux/Mac). Only syncs playlists you created.
 
