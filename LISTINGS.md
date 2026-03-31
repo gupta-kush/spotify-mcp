@@ -20,12 +20,17 @@ The canonical registry. This is where MCP clients will discover and install serv
 
 ## 2. Reddit
 
-Post a demo to **r/ClaudeAI** (~200k members) and **r/LocalLLaMA** (~500k members). Posts with screen recordings get 200-500+ upvotes; text-only "I made a thing" posts get 20-50.
+Post with a screen recording or GIF. Text-only "I made a thing" posts get 20-50 upvotes; demos get 200-500+.
+
+**Where to post (in order):**
+1. **r/mcp** (103k) -- the MCP subreddit. No Spotify server posted there yet. Use `[server]` flair.
+2. **r/ClaudeAI** (675k) -- largest relevant audience. MCP posts get 900-1500+ upvotes but the bar is high. Need a hook, not just an announcement.
+3. **r/ClaudeCode** (189k) -- technical audience that actually uses MCP servers daily.
 
 - **Title style:** "I built a 100+ tool Spotify MCP server" (first person, not salesy)
-- **Must include:** A short screen recording or GIF showing Claude actually controlling Spotify. Hit the wow tools: "find that sad piano song from the 2000s", smart shuffle reordering a playlist, vibe analysis.
+- **Must include:** Short screen recording showing Claude actually controlling Spotify. Show the interesting tools: "find that sad piano song from the 2000s", smart shuffle, vibe analysis.
 - **When:** Tuesday through Thursday, morning US Eastern time
-- **Don't:** Cross-post the exact same text. Tailor slightly for each sub.
+- **Don't:** Cross-post the exact same text. Tailor for each sub.
 
 ## 3. Hacker News Show HN
 
